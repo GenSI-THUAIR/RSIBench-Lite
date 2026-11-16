@@ -1,0 +1,76 @@
+{
+  "runtime_spec_sha256": "973245865dfd44b996c308cb349614501f0139fd9d70569f02a068fd6e765896",
+  "evidence_sha256": {
+    "calibrate.json": "12ad8ed136fa96a53285548129c7a625ee543ecc231abdedd04570687795a020",
+    "benchmark-summary.json": "1ee547a583a41caa7d6d315166bb819e3b05ca07b82b260cffec926806a58e7b",
+    "runtime-lifecycle.json": "10fc1520ff874909f962e84745c2ee69f370cde9c5e1429563d54208e1a3f876"
+  },
+  "performance_baseline": {
+    "unit": "tokens/s",
+    "higher_is_better": true,
+    "output_throughput": 60.84916666666667,
+    "status": "CALIBRATED",
+    "source": "historical-evidence",
+    "runtime_spec_sha256": "973245865dfd44b996c308cb349614501f0139fd9d70569f02a068fd6e765896",
+    "baseline_conditions": {
+      "protocol": "inference-baseline/1",
+      "resources": {
+        "backend": "modal",
+        "gpu": "H200",
+        "gpus": 1,
+        "serve_cpus": 8,
+        "serve_memory_mb": 131072,
+        "benchmark_cpus": 4,
+        "benchmark_memory_mb": 16384
+      },
+      "image": "docker.io/vllm/vllm-openai@sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d",
+      "inputs": [
+        {
+          "kind": "data",
+          "manifest_sha256": "f4ba77cb2e124ef42f0f2ab79c4da1fd319a5abc7927b2157bacd178710ae393"
+        },
+        {
+          "kind": "model",
+          "manifest_sha256": "526db0106b2574b07334137e180f36e6294c879cee15ae1b63f597f4384ca882"
+        }
+      ],
+      "driver_env": {
+        "HARBOR_CUDA_COMPATIBILITY": "0"
+      },
+      "gate": {
+        "kind": "longbench-v2-openai-chat",
+        "data": "/mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-128k-v1.jsonl",
+        "center": 0.63,
+        "tolerance": 0.05,
+        "comparison": "lower_bound",
+        "max_tokens": 32768,
+        "max_concurrency": 4,
+        "stop_tokens": []
+      },
+      "bench_serving": {
+        "arrival_mode": "asap",
+        "backend": "vllm",
+        "dataset_name": "mooncake",
+        "random_input_len": 0,
+        "random_output_len": 0,
+        "random_range_ratio": 1.0,
+        "max_concurrency": 1,
+        "window_duration_sec": 3600,
+        "window_full_duration": true,
+        "window_expected_engines": 1,
+        "trace_sha256": "69c6dc27faa867d06473e48c21bab671a52bada5692d766b9565d0b1629d3c31",
+        "num_prompts": 10000,
+        "seed": 42,
+        "extra_args": [
+          "--dataset-path",
+          "/mnt/rsibench/rsibench/agentic-trace-128k.jsonl",
+          "--mooncake-slowdown-factor",
+          "1.0",
+          "--mooncake-context-length",
+          "131072"
+        ],
+        "bench_timeout_note": "C1固定3600秒计分；外层预算包含trace/词表准备及后置gate，不扩大计分窗口。"
+      }
+    }
+  }
+}

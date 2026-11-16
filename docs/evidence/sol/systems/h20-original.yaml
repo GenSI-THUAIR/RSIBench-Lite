@@ -1,0 +1,15 @@
+data_dir: data/h20
+gpu:
+  bfloat16_tc_flops: 148000000000000.0
+  mem_bw: 4022784000000.0
+  mem_bw_empirical_scaling_factor: 0.8
+  mem_capacity: 102010650624
+  mem_empirical_constant_latency: 3.0e-06
+  sm_version: 90
+misc:
+  nccl_mem:
+    1: 0
+node:
+  inter_node_bw: 0
+  intra_node_bw: 0
+  num_gpus_per_node: 1

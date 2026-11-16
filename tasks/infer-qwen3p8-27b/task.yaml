@@ -1,0 +1,251 @@
+schema_version: '1.4'
+task:
+  name: rsibench/infer-qwen3p8-27b
+  version: 0.1.0
+  description: Optimize SGLang for Qwen3.8-27B on a single H20; evaluate its patch in isolated serve and benchmark
+    jobs
+  authors:
+  - name: RSIBench contributors
+  keywords:
+  - inference
+  - deployment
+  - cuda
+  - h20
+  - sglang
+  - performance-tuning
+  - hybrid-gdn
+metadata:
+  category: systems-engineering
+  difficulty: hard
+  display:
+    model: Qwen3.8-27B(FP8)
+    score_phrase: long-context throughput
+    gate_phrase: the correctness gate
+    python_row: '`python3` (included in the image with SGLang and its dependencies)'
+  contract:
+    launch_display: '`python3 -m sglang.launch_server` included in the image'
+    endpoints:
+    - '`/health`'
+    - '`/generate`'
+    - '`/v1/chat/completions`'
+    - '`/v1/models`'
+    - '`/get_server_info`'
+    max_context: 262144
+    context_at_least: true
+  resources:
+  - label: Bounded-window profiling script (SGLang server-side torch profiler wrapper)
+    path: /mnt/rsibench/rsibench/profile_sglang.py
+environment:
+  cookbook_url: https://docs.sglang.io/cookbook/autoregressive/Qwen/Qwen3.8-27B
+  image_name: docker.io/lmsysorg/sglang:qwen38-27b-cu129
+  os: linux
+  workdir: /workspace/deploy
+  skills_dir: /tmp/harbor-skills
+  build_timeout_sec: 46800.0
+  nodes: 1
+  gpus: 1
+  gpu_types:
+  - NVIDIA_H20
+  cpus: 22
+  memory_mb: 232448
+  storage_mb: 51200
+  env: {}
+  mounts:
+  - /mnt/rsibench/qwen3p8_27b_fp8
+  - /mnt/rsibench/rsibench
+agent:
+  timeout_sec: 28800.0
+  user: root
+verifier:
+  timeout_sec: 54000.0
+  environment_mode: separate
+  environment:
+    os: linux
+    workdir: /workspace/benchmark
+    nodes: 1
+    gpus: 1
+    gpu_types:
+    - NVIDIA_H20
+    cpus: 22
+    memory_mb: 232448
+    storage_mb: 51200
+    mounts:
+    - /mnt/rsibench/qwen3p8_27b_fp8
+    - /mnt/rsibench/rsibench
+    env: {}
+  scoring:
+    python: python3
+    engine_repo: /sgl-workspace/sglang
+    layer_artifact: submit_oci.tar.gz
+    gate:
+      kind: longbench-v2-openai-chat
+      data: /mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-256k-v1.jsonl
+      center: 0.73
+      tolerance: 0.05
+      comparison: lower_bound
+      max_tokens: 49152
+      max_concurrency: 4
+      stop_tokens: []
+      source: Public calibration reference.
+    gate_gsm8k_reference:
+      kind: gsm8k-sglang-generate
+      data: /mnt/rsibench/rsibench/gsm8k_test.jsonl
+      center: 0.97
+      tolerance: 0.05
+      stop_tokens:
+      - Question
+      - 'Assistant:'
+      - <|im_end|>
+      - <|endoftext|>
+      source: Public calibration reference.
+    service_label: Qwen3.8-27B
+    health_timeout_sec: 1800
+    model_path: /mnt/rsibench/qwen3p8_27b_fp8
+    served_model_name: qwen3.8-27b
+    bench_serving:
+      arrival_mode: asap
+      bench_timeout_sec: 21600
+      backend: sglang
+      script_path: /logs/verifier/vendored_bench_serving.py
+      agent_script_path: /mnt/rsibench/rsibench/benchmarks/vendored_bench_serving-asap-v1-04b4e4e148f3224688a6abd0e3765e8e992e2172d6af981a3a74d2fa60d7e595.py
+      agent_script_pending: false
+      dataset_name: mooncake
+      random_input_len: 0
+      random_output_len: 0
+      random_range_ratio: 1.0
+      max_concurrency: 1
+      window_duration_sec: 3600
+      window_full_duration: true
+      window_expected_engines: 1
+      warmup_requests: 0
+      trace_sha256: 819fdc39b13a59dd62f0497a26cecd1d842cbd6c637e77ca26ae3e2a3668229a
+      num_prompts: 10000
+      seed: 42
+      extra_args:
+      - --dataset-path
+      - /mnt/rsibench/rsibench/agentic-trace-256k.jsonl
+      - --mooncake-slowdown-factor
+      - '1.0'
+      - --mooncake-context-length
+      - '262144'
+    performance_baseline:
+      unit: tokens/s
+      higher_is_better: true
+      output_throughput: 108.9275
+      status: CALIBRATED
+      source: Public calibration reference.
+      protocol: c1-fixed-window-token-ids-v1 mooncake agentic-trace-256k.jsonl, context 262144, backend sglang,
+        max_concurrency 1, window3600s/full_duration=true, engines1, warmup_requests=0, slowdown1.0, seed42
+      extra:
+        trace_sha256: 819fdc39b13a59dd62f0497a26cecd1d842cbd6c637e77ca26ae3e2a3668229a
+        benchmark_source_sha256: 765b2c418e282194180bc1570aa87a55f9d7a3a3e023568776b0615601bf256a
+        measured_client_sha256: e2d704cdfc50992087fba33c2b052a89115727e8b305edafa88ae27ab21475bb
+        measured_config_sha256: 0cfc73227cfbf4a1fb1337590eb94b7b91a1c3d6b65d6555c9196fb267e04713
+        canonical_launch_sha256: 7cfa7881edd1ecfcbbc79db8801f9727896a02bfb15d770e0dded2cfc980afb7
+        measurement_manifest: tasks/infer-qwen3p8-27b/calibration/long-context/baseline.json
+        completed_requests: 171
+        partial_deadline: 1
+        not_started: 722
+        total_output_tokens: 392139
+        benchmark_duration_sec: 3600
+        request_success_rate: 1.0
+        warmup_requests: 0
+        measurement_manifest_sha256: 2dde539c75c7fc33a2e34f7bba681125176c96c0103e8b73c20f4649f3a3f860
+        evidence_bytes: 278456
+        evidence_sha256: 01d180fbe2eb01477cc8d4d320b21d5781c579925e6f115743d8889491f1170f
+        oracle_ci:
+          reward: 0.9999719487222644
+          output_throughput: 108.92444444444445
+          measurement_manifest: tasks/infer-qwen3p8-27b/calibration/long-context/oracle-validation.json
+          measurement_manifest_sha256: 5546e8424ccbb6bb4f33e21e26ac11b8bed14274b0ec67a057d517b9f2163de3
+          evidence_bytes: 279487
+          evidence_sha256: 84c3f24ea09ad7ab6cc45646e909d05114d73bfdddf57b59f3befdc333f7d34b
+      gate_reference:
+        kind: gsm8k-sglang-generate
+        num_questions: 200
+        latency_sec: 36.174
+        accuracy: 0.975
+        invalid_rate: 0.005
+    performance_baseline_pre_256k_window:
+      unit: tokens/s
+      higher_is_better: true
+      output_throughput: 159.11560895173284
+      source: Public calibration reference.
+      protocol: token-ids-v1 mooncake agentic-trace-64k.jsonl, context 65536, block 128, max_concurrency 4, slowdown
+        1.0, seed 42, rounds 1
+      extra:
+        trace_sha256: 35ac1eed4c6678847463b6eade6a643e6c0ca3a8779a9f554780ed564a10ed96
+        benchmark_source_sha256: 765b2c418e282194180bc1570aa87a55f9d7a3a3e023568776b0615601bf256a
+        result_sha256: b2b0ad355f8d7f51fc89b52d46b24490ca8136833e60a7c9c1da56cace7e7861
+        duration: 1862.8782050535083
+        completed: 193
+        total_input_tokens: 7528237
+        total_output_tokens: 296413
+        request_throughput: 0.10360312310082363
+        input_throughput: 4041.185827166711
+        output_throughput: 159.11560895173284
+        mean_e2e_latency_ms: 17556.06305848209
+        median_e2e_latency_ms: 5591.166406869888
+        p99_e2e_latency_ms: 232193.86957093957
+        mean_ttft_ms: 1747.7133019291675
+        median_ttft_ms: 489.52601477503777
+        p99_ttft_ms: 13369.917369037843
+        mean_tpot_ms: 12.859218343653627
+        median_tpot_ms: 11.235925446147132
+        p99_tpot_ms: 36.97267028020958
+        mean_itl_ms: 10.299788852576974
+        median_itl_ms: 7.8626836960514375
+        p95_itl_ms: 13.147048403819399
+        p99_itl_ms: 33.58098253607746
+        concurrency: 1.818862962213742
+      gate_reference:
+        kind: gsm8k-sglang-generate
+        accuracy: 0.955
+        invalid_rate: 0.005
+        latency_sec: 36.645
+    bench_serving_random_ids:
+      backend: sglang
+      script_path: /sgl-workspace/sglang/python/sglang/bench_serving.py
+      dataset_name: random-ids
+      random_input_len: 60000
+      random_output_len: 256
+      random_range_ratio: 1.0
+      max_concurrency: 8
+      num_prompts: 16
+      seed: 42
+      extra_args: []
+    performance_baseline_random_ids:
+      output_throughput: 37.46763874017823
+      source: Public calibration reference.
+      protocol: random-ids input=60000 output=256 concurrency=8 prompts=16 seed=42
+      extra:
+        duration: 109.32100708037615
+        completed: 16
+        total_input_tokens: 960000
+        total_output_tokens: 4096
+        request_throughput: 0.1463579638288212
+        input_throughput: 8781.477829729272
+        output_throughput: 37.46763874017823
+        mean_ttft_ms: 20295.318613993004
+        median_ttft_ms: 0.0
+        p99_ttft_ms: 99997.38291632383
+        mean_tpot_ms: 57.42741475890701
+        median_tpot_ms: 6.602612797024787
+        p99_tpot_ms: 321.0372185528132
+        mean_itl_ms: 169.9461824410394
+        accept_length: 2.6553053895860175
+        concurrency: 5.1136461780782305
+platforms:
+  modal:
+    image: docker.io/lmsysorg/sglang@sha256:e35dfb0beaf6b1fb6619ae0dac9474b5cdda24b81cee7202316e371301425e46
+    model:
+      repository: Qwen/Qwen3.8-27B-FP8
+      revision: 017b9c7af6b5689d5dd426a76e0bc077eb5ca20a
+      volume: rsibench-qwen38-fp8-017b9c7a
+      manifest_sha256: f53c9aea475bdc043b7ba17053852c289fb2d241c2a0271a041b74bfdb6057d2
+      manifest: runtimes/open-lite-model.json
+    data:
+      volume: rsibench-text-assets-cbd4f134
+      manifest_sha256: cbd4f13435305bac8e992557abc451162435f0eabfc5e776e6b690b2477ecf40
+      manifest: runtimes/open-lite-data.json
+    baseline: runtimes/modal-baseline.json

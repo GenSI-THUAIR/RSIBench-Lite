@@ -1,0 +1,38 @@
+# 资源继承 task.yaml，仅替换 GPU 类型；Modal Sandbox 无磁盘容量请求接口。
+# reuse_resources 按用户决定暂用旧分母；原测量条件和记录保持不变。
+jobs_dir: jobs
+n_attempts: 1
+n_concurrent_trials: 1
+agents:
+- name: oracle
+environment:
+  import_path: harbor_envs.modal:ModalEnvironment
+  delete: true
+  kwargs:
+    app_name: rsibench-open-lite
+    sandbox_timeout_secs: 86400
+verifier:
+  import_path: verify.inference.runtime_infer_verifier:RuntimeInferVerifier
+  kwargs:
+    mode: smoke
+tasks:
+- path: tasks/infer-qwen3p8-27b
+- path: tasks/infer-museglimmer-30b
+- path: tasks/infer-qwen3vl-32b
+- path: tasks/infer-llada2p1mini-16b
+- path: tasks/infer-wan2p2ti2v-5b
+runtime:
+  resources:
+    agent:
+      gpu_types:
+      - H200
+      storage_mb: null
+    benchmark:
+      gpu_types:
+      - H200
+      storage_mb: null
+    serve:
+      gpu_types:
+      - H200
+      storage_mb: null
+  baseline_policy: reuse_resources

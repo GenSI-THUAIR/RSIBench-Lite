@@ -1,0 +1,45 @@
+{
+  "files": [
+    {
+      "path": "agentic-trace-256k.jsonl",
+      "bytes": 7028685,
+      "sha256": "819fdc39b13a59dd62f0497a26cecd1d842cbd6c637e77ca26ae3e2a3668229a"
+    },
+    {
+      "path": "longbench_v2/longbench_v2-gate-256k-v1.jsonl",
+      "bytes": 58098987,
+      "sha256": "c7db49dce3b82aac95d40bb08e881830212409a40aeba2a46f8d7d47d4a4801b"
+    },
+    {
+      "path": "gsm8k_test.jsonl",
+      "bytes": 749738,
+      "sha256": "3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14"
+    },
+    {
+      "path": "longbench_eval.py",
+      "bytes": 12786,
+      "sha256": "87a2fcc9b72c3bdab8cfc3598041f0de7bc1c96cfa71954fdd410d76e5cdc943"
+    },
+    {
+      "path": "gsm8k_eval.py",
+      "bytes": 13421,
+      "sha256": "e08d602c6a6b6b61ce7d6807759e162fa5550e1bea2556a143ccdffcbd3bd70f"
+    },
+    {
+      "path": "profile_sglang.py",
+      "bytes": 12286,
+      "sha256": "45e5eb2c58b95f69ef6749d3870ccc648da4edc7a943e8a53dc82af3562d1324"
+    },
+    {
+      "path": "profile_trace_report.py",
+      "bytes": 15588,
+      "sha256": "858ddcbc5ceca43b7305dbf1fdfd9cf563373ddba0423087331e6914a489e516"
+    },
+    {
+      "path": "benchmarks/vendored_bench_serving-asap-v1-04b4e4e148f3224688a6abd0e3765e8e992e2172d6af981a3a74d2fa60d7e595.py",
+      "bytes": 101300,
+      "sha256": "04b4e4e148f3224688a6abd0e3765e8e992e2172d6af981a3a74d2fa60d7e595"
+    }
+  ],
+  "total_bytes": 66032791
+}

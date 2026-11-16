@@ -1,0 +1,7 @@
+{
+  "origin": "Frozen OCI fixture produced by buildah; registry locator removed from public metadata.",
+  "media_type": "application/vnd.oci.image.layer.v1.tar+gzip",
+  "descriptor_digest": "sha256:e22ae7688c5650cb5551cf47c07ce217900a5c859e69c4f20c7de1e8233135a9",
+  "diff_id": "sha256:81201146e6c85f6ef40504436727c4e26eb323be6b41ccadee05ef19b6356e6f",
+  "size": 68500
+}

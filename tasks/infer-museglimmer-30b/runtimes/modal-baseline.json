@@ -1,0 +1,183 @@
+{
+  "schema": "modal-oracle-baseline/2",
+  "previous_baseline": {
+    "path": "runtimes/baseline-history/oracle-reference.json",
+    "sha256": "84a51113fe105cdcafbd716286832823704cdff16651060c382b94448792d84c",
+    "output_throughput": 60.84916666666667
+  },
+  "performance_baseline": {
+    "unit": "tokens/s",
+    "higher_is_better": true,
+    "output_throughput": 60.47296296296296,
+    "status": "CALIBRATED",
+    "source": "Arithmetic mean of three complete H200 Oracle throughput measurements.",
+    "baseline_conditions": {
+      "protocol": "inference-baseline/1",
+      "resources": {
+        "backend": "modal",
+        "gpu": "H200",
+        "gpus": 1,
+        "serve_cpus": 22,
+        "serve_memory_mb": 232448,
+        "benchmark_cpus": 22,
+        "benchmark_memory_mb": 232448,
+        "benchmark_gpus": 1,
+        "benchmark_gpu_types": [
+          "H200"
+        ]
+      },
+      "image": "docker.io/vllm/vllm-openai@sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d",
+      "inputs": [
+        {
+          "kind": "data",
+          "manifest_sha256": "f4ba77cb2e124ef42f0f2ab79c4da1fd319a5abc7927b2157bacd178710ae393"
+        },
+        {
+          "kind": "model",
+          "manifest_sha256": "526db0106b2574b07334137e180f36e6294c879cee15ae1b63f597f4384ca882"
+        }
+      ],
+      "driver_env": {
+        "HARBOR_CUDA_COMPATIBILITY": "0"
+      },
+      "gate": {
+        "kind": "longbench-v2-openai-chat",
+        "data": "/mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-128k-v1.jsonl",
+        "center": 0.63,
+        "tolerance": 0.05,
+        "comparison": "lower_bound",
+        "max_tokens": 32768,
+        "max_concurrency": 4,
+        "stop_tokens": []
+      },
+      "bench_serving": {
+        "arrival_mode": "asap",
+        "backend": "vllm",
+        "dataset_name": "mooncake",
+        "random_input_len": 0,
+        "random_output_len": 0,
+        "random_range_ratio": 1.0,
+        "max_concurrency": 1,
+        "window_duration_sec": 3600,
+        "window_full_duration": true,
+        "window_expected_engines": 1,
+        "trace_sha256": "69c6dc27faa867d06473e48c21bab671a52bada5692d766b9565d0b1629d3c31",
+        "num_prompts": 10000,
+        "seed": 42,
+        "extra_args": [
+          "--dataset-path",
+          "/mnt/rsibench/rsibench/agentic-trace-128k.jsonl",
+          "--mooncake-slowdown-factor",
+          "1.0",
+          "--mooncake-context-length",
+          "131072"
+        ],
+        "bench_timeout_note": "C1固定3600秒计分；外层预算包含trace/词表准备及后置gate，不扩大计分窗口。"
+      }
+    },
+    "aggregation": {
+      "method": "arithmetic_mean_output_throughput",
+      "run_count": 3,
+      "samples": [
+        60.84222222222222,
+        61.06777777777778,
+        59.50888888888889
+      ],
+      "mean": 60.47296296296296,
+      "min": 59.50888888888889,
+      "max": 61.06777777777778,
+      "sample_stddev": 0.8424950696513474
+    }
+  },
+  "source_launch_sha256": "b1d47d20d4e94c3fcda6ca563417a33ec8e0462315cd7769055ce32687ce0967",
+  "measurement_runs": [
+    {
+      "source_mode": "score",
+      "runtime_spec_sha256": "613ded55f4f3153a5f0b71b550b955bd9feb32fb474d454aaf0d62f288e309c2",
+      "hardware": {
+        "model": "NVIDIA H200",
+        "driver": "610.57.04"
+      },
+      "output_throughput": 60.84222222222222,
+      "benchmark_wall_time_sec": 3600.0,
+      "gate_accuracy": 0.67,
+      "correctness_passed": true,
+      "request_success_rate": 1.0,
+      "completed_requests": 98,
+      "gate_questions": 100,
+      "gate_cases": 0,
+      "grm_error": "Set GRM_JUDGE_BASE_URL and GRM_JUDGE_API_KEY (or OPENAI_BASE_URL and OPENAI_API_KEY)",
+      "evidence_sha256": {
+        "result.json": "397ba9438d44e22b30307bab75f68865172c200e922408cb6f38cdff3ddffe13",
+        "benchmark-summary.json": "ca3c43758870d890ddc81c7090e63d9250337994b120df590888f6cc28ce70a4",
+        "verifier-config.json": "19901a144a5940d488070b0d1204320b6940883fa461a64134d324872e6440ca",
+        "inputs.json": "cb7355288a5c8b6cfc95d9bc3614c070f441ead74d5d850c23a5af9df85cf0c0",
+        "runtime.json": "aea1ccaf90b7290d26e3c49c616837923ea2c657b439734cc54d8e46dad18f77",
+        "runtime-lifecycle.json": "bea70798a70f8703f917fac9871e305e263e6a637e501b174da870b62cb94181",
+        "gate-result.json": "a92a5188c58af739c90e20be2b07622bd1121a0308b4b0f5fb28cc3edb8de5ab",
+        "reward.json": "4b0b71945d30449a0562c24c12bd51273a4298bdccfab7501cd294b722598b8f",
+        "submit_oci.tar.gz": "008e1ccac369c34b9c14fcb5acbaac50c890b769c2e45f03373850fd8b926b0f"
+      }
+    },
+    {
+      "source_mode": "score",
+      "runtime_spec_sha256": "613ded55f4f3153a5f0b71b550b955bd9feb32fb474d454aaf0d62f288e309c2",
+      "hardware": {
+        "model": "NVIDIA H200",
+        "driver": "610.57.04"
+      },
+      "output_throughput": 61.06777777777778,
+      "benchmark_wall_time_sec": 3600.0,
+      "gate_accuracy": 0.63,
+      "correctness_passed": true,
+      "request_success_rate": 1.0,
+      "completed_requests": 98,
+      "gate_questions": 100,
+      "gate_cases": 0,
+      "grm_error": "Set GRM_JUDGE_BASE_URL and GRM_JUDGE_API_KEY (or OPENAI_BASE_URL and OPENAI_API_KEY)",
+      "evidence_sha256": {
+        "result.json": "47028dd848f27e09eca56ce2d13c39305bb4f55b5d6f238b46fdd923f74269a2",
+        "benchmark-summary.json": "eac0ccf460362a8a592b1dfea416586aa851825df19cb8c6151ec240dde4415e",
+        "verifier-config.json": "19901a144a5940d488070b0d1204320b6940883fa461a64134d324872e6440ca",
+        "inputs.json": "cb7355288a5c8b6cfc95d9bc3614c070f441ead74d5d850c23a5af9df85cf0c0",
+        "runtime.json": "aea1ccaf90b7290d26e3c49c616837923ea2c657b439734cc54d8e46dad18f77",
+        "runtime-lifecycle.json": "cab262215f202ac298d8120a690dfe252bace716dfad9e4a0c62f18950063865",
+        "gate-result.json": "ea15bedb092eba750a9b362ad2624af8fa66ebbb5ad78c18eb893e87f31bef72",
+        "reward.json": "6957081cb727c63e13639cfc10a5dbc4521d580831eb35c83d8a2aeda1190900",
+        "submit_oci.tar.gz": "32ff6bba81ec3ef265acaecc75371a08725cf7fb94801366af1650d87dc2af9a"
+      }
+    },
+    {
+      "source_mode": "score",
+      "runtime_spec_sha256": "613ded55f4f3153a5f0b71b550b955bd9feb32fb474d454aaf0d62f288e309c2",
+      "hardware": {
+        "model": "NVIDIA H200",
+        "driver": "610.57.04"
+      },
+      "output_throughput": 59.50888888888889,
+      "benchmark_wall_time_sec": 3600.0,
+      "gate_accuracy": 0.64,
+      "correctness_passed": true,
+      "request_success_rate": 1.0,
+      "completed_requests": 98,
+      "gate_questions": 100,
+      "gate_cases": 0,
+      "grm_error": "Set GRM_JUDGE_BASE_URL and GRM_JUDGE_API_KEY (or OPENAI_BASE_URL and OPENAI_API_KEY)",
+      "evidence_sha256": {
+        "result.json": "104a12c9be4ac4a1c557e6c93567527ec04bd2b8c11948836b8e97a63bf866e1",
+        "benchmark-summary.json": "87f68265160f2a040e62ff465c668a3de97e39c1b55e806b95b31a2f9e9dd531",
+        "verifier-config.json": "19901a144a5940d488070b0d1204320b6940883fa461a64134d324872e6440ca",
+        "inputs.json": "cb7355288a5c8b6cfc95d9bc3614c070f441ead74d5d850c23a5af9df85cf0c0",
+        "runtime.json": "aea1ccaf90b7290d26e3c49c616837923ea2c657b439734cc54d8e46dad18f77",
+        "runtime-lifecycle.json": "cb985aa453f60d124106ddc612089446c347b573cd0b5987240fbeb63f7a5357",
+        "gate-result.json": "0a10c2d47c21dfd7410c1094d2e41528d70ffb397e44881cfb1f7ddb9c3a32b2",
+        "reward.json": "18f2be3aa7846d65a9ef9a01ee23b9638e013e08f3c3e820ec025d291c1f6349",
+        "submit_oci.tar.gz": "3e3211f12b7e345a112dda0d9e0e15e3bcebc4e11bec76f32a63699257d0d9c3"
+      }
+    }
+  ],
+  "limitations": [
+    "GRM judge was not configured; all three full correctness/performance verifiers passed.",
+    "Runs include serial and concurrent scheduling; retain every preselected complete sample."
+  ]
+}

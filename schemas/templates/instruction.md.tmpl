@@ -1,0 +1,548 @@
+{% set vc = verifier.scoring %}
+{% set d = derived %}
+{% set disp = metadata.display %}
+{% set con = metadata.contract %}
+{% set b = vc.get('bench_serving') %}
+{% set ar = vc.get('agentic_rollout') %}
+{% set vb = vc.get('video_benchmark') %}
+{% macro agent_benchmark_example(d) %}
+
+
+```bash
+{{ d.bench_selftest_command }}
+```
+{% endmacro %}
+# {{ d.title }}
+
+You are an inference infrastructure optimization engineer. Your task is to submit a reproducible {{ d.engine }} optimization artifact: a standard OCI image layer (`{{ vc.layer_artifact }}`). The evaluator applies it to the root filesystem of a fresh {{ d.env_phrase }}, deploys {{ disp.model }} using your `launch.sh`, and scores it by {{ disp.score_phrase }} provided that {{ disp.gate_phrase }} passes.
+
+You are currently at {{ d.location_phrase }} of the Agent Job and can use {{ d.debug_phrase }} for debugging (`localhost` inside the pod resolves only to 127.0.0.1, while the service binds to IPv6; use `{{ d.endpoint_local }}` for self-tests). Final evaluation collects only your OCI image layer and does not reuse the service you started.
+
+## Deliver a layer before optimizing
+
+**Delivering a layer is the first phase, not a final cleanup step.** After checking the environment, and before starting any model or long experiment, generate and validate a deliverable layer from the preinstalled baseline `launch.sh` within 5 minutes. From then on, `/logs/submission/{{ vc.layer_artifact }}` must always exist and contain the most recent fully validated version.
+
+1. Generate the baseline layer and pass the gzip/tar/path/permission checks below. If this fails, fix delivery immediately before starting optimization.
+2. Keep experimental changes in the working tree first. Only after the corresponding service, correctness, and performance checks all pass should you add the explicitly selected files to upper and atomically replace the final layer. Failed or unverified experiments must not overwrite the existing layer. **Starting validation in the background does not mean it has passed**: wait for the validation process to exit with code 0 and read its results to confirm the gate results and request success rate before refreshing the layer.
+
+## Execution budget and clean completion
+
+The execution budget for this Agent run is **{{ agent.timeout_sec | int }} seconds**, starting when you receive this message.
+
+- Record the current time at the start, keep track of the remaining time, and check elapsed time and remaining budget before every long experiment. {{ '' }}
+- Reserve time for final validation, cleaning up temporary changes, and returning normally. Do not start experiments that are unlikely to finish within the remaining budget; you may finish early when the existing results are sufficient.
+- At completion, package the best validated, compliant changes into the final layer, report validation results and any unfinished work, and exit normally. Do not rely on forced timeout or leave background experiments running as a form of delivery.
+- Before stopping a service, identify the exact PID with `pgrep -af`, run `kill <PID>`, and verify the result. Do not use an unqualified `pkill -f <process keyword>`: it can match the shell or Agent tool call carrying that command and kill your own session.
+
+## Allowed changes
+
+You may modify any files, but you must include all of them as files in the same layer.
+
+- The sole designated launch script is `{{ vc.engine_repo }}/launch.sh`. A baseline version that can start the service is preinstalled in the repository. Modify that script and include it in the layer.
+- Do not run `git commit`, change HEAD, or modify `.git`.
+- You may create temporary logs, caches, and processes for debugging, but they will not be included in final evaluation.
+- Do not convey the final configuration through `{{ environment.workdir }}/`, other directories, or external state.
+- Do not delete, move, or modify model weights or {{ d.gate_name_sp }} data.
+- {{ d.no_restart_clause }}
+
+## Deliverable: OCI image layer
+
+Before the time window ends, you must package your final changes yourself into `/logs/submission/{{ vc.layer_artifact }}`,
+a standard OCI filesystem layer (media type `application/vnd.oci.image.layer.v1.tar+gzip`;
+see OCI image-spec layer.md for its semantics: https://github.com/opencontainers/image-spec/blob/v1.1.1/layer.md):
+
+- Paths in the tar archive must be relative to the root filesystem (for example, `{{ d.layer_launch_member }}`); they must not be absolute or contain `..`. New directories require their own directory entries; parent directories absent from the base are not created automatically.
+- To delete a base file, place an empty `.wh.<name>` file in the same directory. To replace an entire directory, place a `.wh..wh..opq` marker inside it (the base contents are removed before this layer's contents are written).
+- Only regular files, directories, symbolic links, and hard links are allowed (a hard-link target must appear earlier in this layer). File permission bits are preserved; `launch.sh` must be executable. Directory entries also set permissions, ownership, and modification times, including for directories already in the base. When packaging ancestor directories, first copy and check their attributes against the base. Deliver only directory attributes you intend to preserve or change; do not propagate temporary `mktemp`/`mkdir` defaults into the base.
+- Do not touch `/proc`, `/sys`, `/dev`, `/run`, or `/logs`{{ d.forbidden_extra }}. Do not include model weights, datasets, logs, or temporary artifacts in the layer.
+- Size limits: 100 MiB compressed and 1 GiB uncompressed.
+
+{% if vc.get('evaluation_baseline') %}
+Before applying your OCI layer, each evaluation Train Job installs the version-pinned baseline support files from the task's `environment/`, matching those preinstalled in your workspace (excluding `launch.sh`). Your layer is applied afterward, so it can replace or delete these files. Include any changes to them in your layer; unchanged baseline files do not need to be repackaged.
+
+{% endif %}
+The first checkpoint must include at least the preinstalled baseline `launch.sh`. Subsequently, explicitly append each **validated file you actually intend to deliver** to `DELIVER` using its relative path. Do not blindly package the entire repository or the result of `git add -A`. Python-generated `__pycache__`/`.pyc`, logs, and caches are not deliverables.
+
+```bash
+set -euo pipefail
+REPO="{{ vc.engine_repo }}"
+OUT="${HARBOR_PATCH_OUTPUT_DIR:-/logs/submission}/{{ vc.layer_artifact }}"
+DELIVER=(launch.sh)  # Append repository-relative paths individually for other validated source changes.
+UPPER=$(mktemp -d)
+mkdir -p "$(dirname "$OUT")"
+NEXT=$(mktemp "$(dirname "$OUT")/.{{ vc.layer_artifact }}.XXXXXX")
+cleanup() { rm -rf -- "$UPPER" "$NEXT"; }
+trap cleanup EXIT
+
+for rel in "${DELIVER[@]}"; do
+  [[ "$rel" != /* && "$rel" != *".."* ]]
+  test -e "$REPO/$rel" || test -L "$REPO/$rel"
+  mkdir -p "$(dirname "$UPPER$REPO/$rel")"
+  cp -a -- "$REPO/$rel" "$UPPER$REPO/$rel"
+done
+chmod 0755 "$UPPER$REPO/launch.sh"
+
+# To delete a base file, explicitly create .wh.<filename> in the corresponding upper directory before packaging.
+# Restore directory attributes after copying, so temporary mkdir defaults do not alter base ancestor directories.
+while IFS= read -r -d '' dir; do
+  source_dir="${dir#"$UPPER"}"
+  test -d "$source_dir"
+  chown --reference="$source_dir" "$dir"
+  chmod --reference="$source_dir" "$dir"
+  touch -r "$source_dir" "$dir"
+done < <(find "$UPPER" -depth -mindepth 1 -type d -print0)
+tar -czf "$NEXT" -C "$UPPER" .
+gzip -t "$NEXT"
+tar -tzf "$NEXT" | sed 's#^\./##' | grep -Fx '{{ d.layer_launch_member }}'
+test "$(stat -c %s "$NEXT")" -le $((100 * 1024 * 1024))
+chmod 0644 "$NEXT"
+mv -f -- "$NEXT" "$OUT"
+trap - EXIT
+rm -rf -- "$UPPER"
+ls -l "$OUT"
+```
+
+Only after `NEXT` passes all checks does `mv` replace the final file, so failed experiments cannot damage the last-known-good layer. Rerun the entire command block whenever you update `DELIVER`; do not modify the working tree and forget to refresh the layer.
+
+After the Agent finishes, the evaluation system only validates this file (existence, size, gzip/tar structure, and the `{{ d.layer_launch_member }}` entry) and records its sha256, diff_id, and repository baseline. It does not collect working-tree changes for you. All Agent Job state other than this layer is discarded.
+
+{% if d.has_rollout %}
+Success requires all of the following: the layer applies consistently to {{ d.apply_phrase }}; `launch.sh` starts the service on {{ d.deploy_target }}; the {{ d.gate_name }} correctness gate passes; **online agent rollout solves ≥ {{ ar.min_solved }}/{{ d.rollout.n_tasks }} tasks**. Final reward is the ratio of measured rollout output throughput to the Oracle baseline ({{ vc.performance_baseline.output_throughput | round2 }} tok/s), or 0 if any correctness gate fails (see “Performance and final reward” for the protocol).
+{% endif %}
+{% if d.perf_is_window %}
+Success requires all of the following: the layer applies consistently to {{ d.apply_phrase }}; `launch.sh` starts the service on {{ d.deploy_target }}; the fixed window has output and no request errors; the {{ d.gate_name }} correctness gate passes. In-flight partial requests at the window deadline are normal; draining the entire trace is not required. Final reward is the ratio of window output throughput to the Oracle baseline under the same protocol, or 0 if correctness fails.
+{% elif d.perf_is_replay %}
+Success requires all of the following: the layer applies consistently to {{ d.apply_phrase }}; `launch.sh` starts the service on {{ d.deploy_target }}; the {{ d.gate_name }} correctness gate passes; all agentic replay workload requests succeed. Final reward is the ratio of this workload's output throughput to the Oracle baseline, or 0 if correctness fails.
+{% endif %}
+{% if d.perf_is_bench %}
+Success requires all of the following: the layer applies consistently to {{ d.apply_phrase }}; `launch.sh` starts the service on {{ d.deploy_target }}; the {{ d.gate_name }} correctness gate passes; {{ b.num_prompts }}/{{ b.num_prompts }} fixed-workload requests succeed. Final reward is the ratio of output throughput to the Oracle baseline, or 0 if correctness fails.
+{% endif %}
+{% if d.perf_is_video %}
+Success requires all of the following: the layer applies consistently to {{ d.apply_phrase }}; `launch.sh` starts the service as a foreground process on {{ d.deploy_target }}; all video comparison gates pass. Final reward is the ratio of measured videos/hour to the Oracle baseline, or 0 if a gate fails.
+{% endif %}
+
+### Generalizable optimizations and GRM
+
+Optimizations must come from engineering improvements that generalize to ordinary production workloads, such as kernels, scheduling, memory, parallelism, batching, or legitimate engine configuration. Do not gain score by reducing contractually required quality, skipping real work, exploiting fixed samples or scoring details, or exploiting benchmark-specific padding patterns. Passing this benchmark's correctness gate does not make such shortcuts compliant.
+
+If GRM determines that an optimization is noncompliant, final reward is set to 0 even if deployment, correctness, and throughput tests pass. **Little or no improvement is not itself a GRM violation**; performance is measured by the existing throughput score. Do not retain nongeneralizable optimizations just to beat the baseline.
+
+## Available resources
+
+| Item | Path |
+| --- | --- |
+| {{ d.engine }} Git repository | `{{ vc.engine_repo }}` |
+| Model weights{% if disp.variant %} ({{ disp.variant }}){% endif %} | `{{ vc.model_path }}` |
+| {{ d.gate_data_label }} | `{{ vc.gate.data }}` |
+{% if vc.gate.kind == "longbench-v2-openai-chat" %}
+| LongBench v2 quick-evaluation script | `{{ d.longbench_script_path }}` |
+{% endif %}
+{% if d.quick_check %}
+| {{ d.quick_check.data_label }} (quick-check reference gate) | `{{ d.quick_check.data }}` |
+| {{ d.quick_check.name }} quick-evaluation script | `{{ d.quick_check.script_path }}` |
+{% endif %}
+{% if d.has_rollout %}
+{% if vc.gate.kind.startswith('gsm8k') %}
+| GSM8K quick-evaluation script | `{{ d.gsm8k_script_path }}` |
+{% endif %}
+| agentic replay trace | `{{ d.bench_dataset_path }}` |
+| Replay benchmark script | `{{ d.agent_script_path }}` |
+{% endif %}
+{% if d.perf_is_replay %}
+| agentic replay trace | `{{ d.bench_dataset_path }}` |
+{% if not d.perf_is_window %}
+| Replay benchmark script{% if d.agent_script_pending %} (pending publication){% endif %} | `{{ d.agent_script_path }}` |
+{% endif %}
+{% endif %}
+{% if d.perf_is_bench and b.get('agent_script_path') %}
+| Versioned self-test wrapper{% if d.agent_script_pending %} (pending publication){% endif %} | `{{ d.agent_script_path }}` |
+{% endif %}
+{% for row in metadata.resources %}
+| {{ row.label }} | `{{ row.path }}` |
+{% endfor %}
+| Python | {{ disp.python_row }} |
+
+{{ d.node_phrase }}
+
+## launch.sh contract
+
+`{{ vc.engine_repo }}/launch.sh` must satisfy the following (the preinstalled baseline already satisfies all requirements; your changes must preserve them):
+
+1. {{ d.exec_clause }}
+2. Deploy the {{ disp.model }} weights using {{ d.deploy_scale }}{% if con.deploy_note %} ({{ con.deploy_note }}){% endif %}.
+3. Use {{ con.launch_display }}.
+4. The service must natively listen on IPv6 `::` at port `${{ d.port_var }}` (the host port allocated by the platform to the head pod, injected into your shell and when evaluation executes `launch.sh`; do not hardcode a port, since other hostnet jobs on the same host may contend for fixed ports), with served model name `{{ vc.served_model_name }}`.
+5. The service must support {{ d.endpoints_inline }}.
+6. {% if con.max_context %}Maximum context length: {{ d.context_lead }} {{ con.max_context }}; {% endif %}the service process must remain running and must not depend on Agent Job processes.
+
+{{ d.serve_apply_para }}
+
+## Independent evaluation protocol
+
+Evaluation consists of three mutually isolated jobs:
+
+```text
+Your Job (delivers only the OCI layer)
+        ↓
+Patched Serve Job ({{ d.serve_phrase }}; applies the layer and runs launch.sh)
+        ↓ HTTP over global IPv6
+Clean Benchmark Job (no layer applied; runs the trusted benchmark)
+```
+
+The Benchmark Job uses the original, unmodified evaluation scripts and the {{ disp.model }} tokenizer, so your changes to the benchmark, {{ d.gate_name_sp }} scripts, or statistics code do not affect scoring.
+
+### Correctness gate
+
+{% if vc.gate.kind == "gsm8k-openai-chat" %}
+- GSM8K official test;
+- 0-shot chat (`/v1/chat/completions`), first {{ d.gsm8k_num_questions }} questions, concurrency {{ d.gsm8k_parallel }};
+- A fixed system prompt requires ending with `#### <number>`;
+- temperature 0,top_p 1,`max_tokens={{ d.gsm8k_chat_max_tokens }}`;
+- Reference accuracy: {{ d.gate_band }}.
+{% endif %}
+{% if vc.gate.kind == "gsm8k-sglang-generate" %}
+- GSM8K official test;
+- 5-shot, first {{ d.gsm8k_num_questions }} questions, concurrency {{ d.gsm8k_parallel }};
+- temperature 0,top_p 1,`max_new_tokens=512`;
+- Reference accuracy: {{ d.gate_band }}.
+{% endif %}
+{% if vc.gate.kind == "mmmu-openai-chat" %}
+- Multiple-choice subset of MMMU validation (all with images);
+- `/v1/chat/completions`, images supplied as base64 `image_url` content blocks, concurrency {{ d.mmmu_parallel }};
+- temperature 0, top_p 1, `max_tokens=8192`, extract 'Answer: $LETTER';
+- Reference accuracy: {{ d.gate_band }}.
+{% endif %}
+{% if vc.gate.kind == "gpqa-diamond-openai-chat" %}
+- GPQA diamond ({{ d.gpqa_num_questions }} questions from official simple-evals, frozen option order);
+- Requests use the OpenAI chat API, simple-evals formatting, and 'Answer: <LETTER>' extraction;
+- Reference accuracy: {{ d.gate_band }}.
+{% endif %}
+{% if vc.gate.kind == "longbench-v2-openai-chat" %}
+- LongBench v2 (a frozen {{ d.longbench_num_questions }}-question, four-option subset of official THUDM/LongBench-v2 for this task's context tier; individual prompts range from tens of thousands to over two hundred thousand tokens, directly checking for regressions in long-context inference);
+- Requests use the OpenAI chat API, official 0-shot formatting, and 'The correct answer is (X)' extraction, at concurrency {{ d.longbench_parallel }};
+- temperature 0,`max_tokens={{ d.longbench_max_tokens }}`{% if vc.gate.get('reasoning_effort') %},`reasoning_effort={{ vc.gate.reasoning_effort }}`{% endif %};
+- Reference accuracy: {{ d.gate_band }}.
+{% if d.quick_check %}
+
+**Quick check in minutes**: the original {{ d.quick_check.name }} gate ({{ d.quick_check.protocol }}) is retained unchanged as a reference gate and does not affect the verdict; reference accuracy is {{ d.quick_check.band }}. Run it after each change to check for service regressions (accuracy and invalid rate); it takes minutes. A LongBench v2 run takes tens of minutes to hours, so use it for final confirmation before delivery. Both scripts and datasets are copies from the same source as the evaluator's trusted copies; changing your copies does not affect scoring.
+{% endif %}
+{% if not d.has_rollout %}
+
+```bash
+{% if d.quick_check %}
+# {{ d.quick_check.name }} quick check (reference gate, same protocol as the historical gate, takes minutes)
+cat > /tmp/quick-check-config.json <<'CFG'
+{"gate": {"kind": "{{ d.quick_check.kind }}",
+          "stop_tokens": {{ d.quick_check.stop_tokens_json }}{{ d.quick_check.extra_json }}},
+ "served_model_name": "{{ vc.served_model_name }}"}
+CFG
+{{ vc.python }} \
+  {{ d.quick_check.script_path }} \
+  "{{ d.endpoint_local }}" \
+  {{ d.quick_check.data }} \
+  /tmp/quick-check-result.json /tmp/quick-check-config.json
+
+{% endif %}
+# Correctness gate (LongBench v2, long context; concurrency {{ d.longbench_parallel }}, takes tens of minutes to hours): final check before delivery, same protocol as the evaluation gate
+cat > /tmp/gate-config.json <<'CFG'
+{"gate": {"kind": "{{ vc.gate.kind }}"{{ d.gate_selftest_extra_json }}},
+ "served_model_name": "{{ vc.served_model_name }}"}
+CFG
+{{ vc.python }} \
+  {{ d.longbench_script_path }} \
+  "{{ d.endpoint_local }}" \
+  {{ vc.gate.data }} \
+  /tmp/gate-result.json /tmp/gate-config.json
+```
+{% endif %}
+{% endif %}
+{% if vc.gate.kind == "video-reference" %}
+{% if d.video.get('video_only') %}
+The trusted Benchmark Job reads all {{ d.video.case_count }} unique prompt/seed requests from the read-only reference pool frozen by content hash. It first performs a {{ vb.warmup_num_inference_steps }}-step warmup of the same shape with separate public input `{{ vb.warmup | tojson }}`, then generates the entire working set in frozen ID order at concurrency 1. Timed inputs must not reuse the warmup prompt/seed. The quality gate uses these timed outputs; the same inputs are not generated once beforehand.
+
+- Each request fixes {{ vb.request.width }}×{{ vb.request.height }}, {{ vb.request.num_frames }} frames, {{ vb.request.fps }} FPS, and {{ vb.request.num_inference_steps }} denoising steps. The full public request configuration is `{{ vb.request | tojson }}`.
+- Weights, scheduler/solver, VAE precision/tiling, and scoring dependency identities are bound as `{{ vb.identity | tojson }}`. Do not change the workload, ignore prompt/seed, or replay prerecorded output.
+- Output must be MP4 containing only a {{ d.video.video_codec }} video stream; silent audio tracks are forbidden. Full decoding checks frame count, canvas dimensions, frame rate, complete continuous timestamps, and duration. The evaluator does not insert frames or resize output.
+- Each video must have all-frame AlexNet LPIPS ≤ {{ vb.quality.lpips_max }} and worst-frame LPIPS ≤ {{ vb.quality.lpips_worst_frame_max }}; adjacent-frame temporal-difference MAE ≤ {{ vb.quality.temporal_delta_mae_max }} and worst adjacent-frame error ≤ {{ vb.quality.temporal_delta_worst_max }}; motion ratio relative to the reference must be within [{{ vb.quality.motion_ratio_min }}, {{ vb.quality.motion_ratio_max }}].
+- The reference pool, full configuration, thresholds, and independent repeated baseline/known-good/behavioral negative-control receipts must match; otherwise the task fails admission and cannot be scored. All requests and MP4/hash evidence must be complete; submitting only the best result is not allowed.
+{% else %}
+The trusted Benchmark Job first performs a {{ vb.warmup_num_inference_steps }}-step warmup of the same shape, then sends one timed request using the following official upstream quality-CI case:
+
+- prompt: `{{ vb.request.prompt }}`
+- Seed {{ vb.request.seed }}, explicit `aspect_ratio={{ vb.request.aspect_ratio }}`, fixed canvas {{ vb.request.width }}×{{ vb.request.height }}, {{ vb.request.num_frames }} frames, {{ vb.request.fps }} FPS, {{ vb.request.num_inference_steps }} denoising steps;
+- {{ d.video.task_display }}, with video/audio flow shifts {{ vb.request.flow_shift }}/{{ d.video.audio_flow_shift }}, respectively;
+- Output must contain {{ d.video.video_codec }} video and {{ d.video.audio_codec }}, {{ d.video.audio_khz }} kHz, stereo audio.
+
+The candidate MP4 is compared against a BF16 reference with the same version, weights, and input. The gate requires:
+
+- All-frame AlexNet LPIPS ≤ {{ vb.quality.lpips_max | round2 }};
+- multi-resolution STFT audio spectral cosine ≥ {{ vb.quality.audio_spectral_cosine_min | round2 }};
+- Audio RMS ratio within [{{ vb.quality.audio_rms_ratio_min | round2 }}, {{ vb.quality.audio_rms_ratio_max | round2 }}];
+- Frame count, canvas dimensions, frame rate, and video/audio encoding contracts all pass.
+{% endif %}
+{% endif %}
+{% if d.perf_is_video %}
+
+If service startup fails or the video comparison gate fails, final reward is 0.
+
+### Performance scoring
+
+{% if d.video.get('video_only') %}
+The performance metric is `videos/hour = 3600 × completed videos / complete working-set wall-clock seconds`, at fixed concurrency 1. Timing includes text encoding, all denoising, VAE, MP4 encoding, and complete media delivery. Only after all request gates pass and success rate is 1.0 is reward the ratio of measured videos/hour to the Oracle baseline under the same protocol. Warmup and trusted quality-metric computation are untimed; no generation stage may be subtracted.
+{% else %}
+The performance metric for the timed request is `videos/hour = 3600 / client_wall_time_sec`, with one request at concurrency 1. Reward is the ratio of measured videos/hour to the Oracle baseline.
+{% endif %}
+{% endif %}
+{% if d.perf_is_bench %}
+
+### Performance workload
+
+After correctness passes, the Clean Benchmark Job uses the original evaluation scripts and the {{ disp.model }} tokenizer to execute the fixed {{ d.dataset_display }} workload:
+
+| Parameter | Value |
+| --- | --- |
+{% if d.image %}
+| Images per request | {{ d.image.count }} × {{ d.image.resolution }} {{ d.image.format }} (random content) |
+| text input length | {{ b.random_input_len }} tokens |
+{% endif %}
+{% if d.bench_is_text %}
+| input length | {{ b.random_input_len }} tokens |
+{% endif %}
+| output length | {{ b.random_output_len }} tokens |
+| max concurrency | {{ b.max_concurrency }} |
+| prompts | {{ b.num_prompts }} |
+| request rate | `inf` |
+{% if d.bench_is_text %}
+| random range ratio | `{{ b.random_range_ratio }}` |
+{% endif %}
+| seed | `{{ b.seed }}` |
+
+Evaluation records TTFT p50/p99, TPOT p50/p99, output throughput, request success rate, and total duration. The performance score is normalized by baseline output throughput under the same protocol; all raw metrics are also retained in `reward.json`.
+{% if b.get('agent_script_path') %}
+
+### Performance self-test (versioned wrapper)
+
+If the command declares `HARBOR_BENCH_SERVING`, retain it: it selects the native benchmark inside the image, to which the wrapper applies the same compatibility fixes as formal scoring. Do not run the unmodified native client directly or substitute another benchmark.
+
+{{ agent_benchmark_example(d) }}
+{% endif %}
+{% endif %}
+{% if d.perf_is_window %}
+
+### Performance workload (fixed-window agentic replay)
+
+After the service is ready, the independent CPU Clean Benchmark Job **measures the window first, then runs the correctness gate**. {% if b.get('warmup_requests', 0) > 0 %}Before the window, it completes {{ b.warmup_requests }} warmup requests using the first trace input, with an output budget of at most 32 tokens and a total budget of {{ b.get('warmup_timeout_sec', 600) }} seconds. Formal timing starts only after warmup succeeds and all engines are idle. Warmup time and output tokens do not count toward the score; the formal trace still starts from the first entry. Warmup failure or timeout prevents window measurement.{% else %}There is no preliminary GSM8K or additional model warmup, matching the cold-service Oracle baseline.{% endif %} The trusted `fixed_window_benchmark.py` sends requests sequentially at C1 from the original trace prefix, preserving each request's input/output budget, shared prefixes, original timestamps, seed, and context settings. Requests are not truncated to fit the window.
+
+| Parameter | Value |
+| --- | --- |
+| dataset | `{{ b.dataset_name }}` / `{{ d.bench_dataset_file }}` |
+| trace SHA-256 | `{{ b.trace_sha256 }}` |
+| prompt protocol | `{{ d.bench_prompt_protocol }}` |
+| context budget | {{ d.bench_context_length }} tokens |
+| max concurrency | {{ b.max_concurrency }} |
+| measurement window | {% if b.get('window_full_duration', false) %}Exactly{% else %}At most{% endif %} {{ b.window_duration_sec }} seconds |
+| prompt cap | {{ b.num_prompts }} (prefix limit; not all requests must complete) |
+| expected engines | {{ b.window_expected_engines }} |
+| idle metrics backend | `{{ b.get('window_idle_backend', b.backend) }}` |
+| arrival mode | `{{ d.bench_arrival_mode }}`{% if d.bench_arrival_mode == 'asap' %} (request rate = `inf`, limited only by the existing concurrency cap){% else %} (arrivals follow original trace timestamps){% endif %} |
+| slowdown factor | `{{ d.bench_slowdown }}` (applies only in trace mode) |
+| seed | `{{ b.seed }}` |
+
+- `output_throughput = output tokens received within the window / actual measurement elapsed_sec`. Timing includes prefill, scheduling, and waiting. Service startup, trace/tokenizer preparation, and the subsequent gate are excluded from the denominator; external job wall time is not used.
+{% if d.bench_arrival_mode == 'asap' %}- Original trace timestamps are retained as evidence, but their arrival times are not awaited. At C1, the next request is sent immediately after the previous one finishes, without looping or resampling.{% endif %}
+{% if b.get('window_full_duration', false) %}- This task measures the full {{ b.window_duration_sec }} seconds. {% if d.bench_arrival_mode == 'asap' %}If the entire frozen working set is exhausted early, report `workload_exhausted`; idling to fill the window and then scoring is not allowed.{% else %}Even if all requests finish early, the denominator remains {{ b.window_duration_sec }} seconds; do not repeat the trace.{% endif %}{% endif %}
+- Tokens received before the deadline count for both completed requests and requests still in flight at cutoff. Partials caused by cutoff are normal, and unstarted requests are not failures; draining the entire trace is not required. HTTP/stream errors remain failures and must not be hidden as normal partials.
+- After measurement, perform a bounded idle check to confirm that all declared engines have no running/waiting requests before executing the real correctness gate above. A failed idle check prevents scoring.
+- If quality passes and the window has output with no request errors, `reward = output_throughput / {{ vc.performance_baseline.output_throughput }}`; otherwise reward is 0. The Oracle baseline is **{{ vc.performance_baseline.output_throughput }} tok/s** and may only be compared under the same window protocol.
+
+The trusted CPU verifier's internal invocation is `python fixed_window_benchmark.py endpoint outputdir verifier-config.json`. The evaluator stages fixed scripts and configuration; this does not imply that those files or `/logs/verifier` artifacts exist in the Agent Job. The evaluator retains `window/manifest.json`, `window/requests.jsonl`, `window/summary.json`, and idle-check evidence. The old unbounded replay self-test is not an equivalent reproduction of this window baseline; its throughput must not use this denominator.
+{% endif %}
+{% if d.perf_is_replay and not d.perf_is_window %}
+
+If service startup fails or {{ d.gate_name_sp }} accuracy fails the declared correctness gate, final reward is 0.
+
+### Performance workload (agentic replay, used for final reward)
+
+After correctness passes, the Clean Benchmark Job replays the **agentic replay workload** (`{{ d.bench_dataset_file }}`, synthesized from real Terminal-Bench 2.1 coding-agent trajectories) using the trusted copy of `vendored_bench_serving.py`:
+
+| Parameter | Value |
+| --- | --- |
+| dataset | `mooncake` replay of `{{ d.bench_dataset_file }}` |
+| prompt protocol | `{{ d.bench_prompt_protocol }}` (token-ids-v1 is enabled only by an explicit context flag) |
+{% if d.bench_context_length is not none %}
+| context budget | {{ d.bench_context_length }} tokens |
+{% endif %}
+| max concurrency | {{ b.max_concurrency }} |
+| arrival mode | `{{ d.bench_arrival_mode }}` |
+| slowdown factor | `{{ d.bench_slowdown }}` (applies only in trace mode) |
+| request rate | {% if d.bench_arrival_mode == 'asap' %}`inf` (no waiting for trace timestamps; limited only by the existing concurrency cap){% else %}`trace` (driven by original timestamps; CLI `--request-rate inf` does not disable waiting){% endif %} |
+| seed | `{{ b.seed }}` |
+
+Evaluation records TTFT p50/p99, TPOT p50/p99, output throughput, request success rate, and total duration. The performance score is normalized by baseline output throughput under the same protocol; all raw metrics are also retained in `reward.json`.
+
+Oracle baseline: **output throughput `{{ vc.performance_baseline.output_throughput | round2 }} tok/s`** (see `performance_baseline` in the evaluation configuration for calibration protocol and provenance).
+
+**Use this workload for both bottleneck profiling and before/after optimization comparisons**. It is synthesized from real coding-agent trajectories ({% if d.bench_arrival_mode == 'trace' %}real within-session request intervals, {% else %}no arrival waiting, {% endif %}block-shared prefixes, and mixed request lengths), so its prefill/decode mix and prefix-cache hits reflect real serving behavior. Tuning only against a single-length stress test will overfit.
+{% if d.gate_script_path %}
+
+Self-test script copies are on HDFS (from the same source as the trusted copies used by the evaluator in isolated pods; changing your copies does not affect scoring):
+
+```bash
+# Correctness self-test: same protocol as the evaluation gate
+cat > /tmp/gate-config.json <<'CFG'
+{"gate": {"kind": "{{ vc.gate.kind }}",
+          "stop_tokens": {{ d.gate_stop_tokens_json }}{{ d.gate_selftest_extra_json }}},
+ "served_model_name": "{{ vc.served_model_name }}"}
+CFG
+{{ vc.python }} \
+  {{ d.gate_script_path }} \
+  "{{ d.endpoint_local }}" \
+  {{ vc.gate.data }} \
+  /tmp/gate-result.json /tmp/gate-config.json
+
+```
+{% endif %}
+{% if b.get('agent_script_path') %}
+{{ agent_benchmark_example(d) }}
+Check `mooncake_prompt_protocol`, `mooncake_context_length`, `mooncake_seed`, and `mooncake_block_size`{% if b.get('arrival_mode') %}, as well as `arrival_mode`, `request_rate`, and `measurement_protocol`{% endif %} in the results. Upgrading the script alone does not enable token-ids-v1. Throughputs from different arrival modes, request protocols, or token-counting versions must not share a baseline denominator.
+{% elif vc.gate.kind.startswith('gsm8k') %}
+```bash
+# Agentic replay benchmark (same protocol as final reward)
+{{ vc.python }} \
+  {{ d.agent_script_path }} \
+  --backend {{ b.backend }} --base-url "{{ d.endpoint_local }}" \
+{% if b.backend == "vllm" %}
+  --served-model-name {{ vc.served_model_name }} \
+{% endif %}
+  --model {{ vc.model_path }} \
+  --tokenizer {{ vc.model_path }} \
+  --dataset-name {{ b.dataset_name }} \
+  --dataset-path {{ d.bench_dataset_path }} \
+  --mooncake-slowdown-factor {{ d.bench_slowdown }} --max-concurrency {{ b.max_concurrency }} \
+{% if b.get('arrival_mode') %}  --mooncake-arrival-mode {{ b.arrival_mode }} \
+{% endif %}  --num-prompts {{ b.num_prompts }} --request-rate inf --seed {{ b.seed }}
+```
+
+{% if d.bench_arrival_mode == 'trace' %}For a rough test under time pressure, reduce `--mooncake-slowdown-factor` to compress the timeline, but formal before/after comparisons must use the same factor.{% else %}Formal comparisons must use the same ASAP arrival mode, complete working set, and concurrency cap.{% endif %}
+{% endif %}
+{% endif %}
+{% if d.has_rollout %}
+
+If service startup fails or {{ d.gate_name }} accuracy is outside tolerance, final reward is 0.
+
+### Performance and final reward: online agent rollout
+
+After the correctness gate passes, the evaluator initiates **real coding-agent rollouts** against your service from an independent evaluation machine ({{ ar.agent }} is the agent framework, and **your deployed service itself is the agent's brain**). It runs {{ ar.n_attempts }} attempts on each of the following {{ d.rollout.n_tasks }} Terminal-Bench 2.1 tasks (concurrency {{ ar.n_concurrent }}):
+
+  {{ d.rollout.subset_inline }}
+
+Scoring is fully public:
+
+- **Correctness gate: solved tasks ≥ {{ ar.min_solved }}** ({{ ar.min_solved_derivation }}). Fewer than {{ ar.min_solved }} → reward = 0.
+- **Performance score: output throughput over the full rollout ÷ {{ vc.performance_baseline.output_throughput | round2 }} tok/s** (Oracle baseline under the same protocol).
+- Per-task Oracle calibration values are also public in per_task_calibration in the evaluation configuration.
+
+This workload measures correctness and performance together. If optimization harms model behavior (long-context attention, speculative-decoding acceptance, or sampling), the solved-task count drops first; if it only makes execution faster, the throughput score rises accordingly.
+
+## Workflow constraint: optimize against the evaluated workload
+
+The two types of evaluation used during optimization serve different purposes; **do not mix them up**:
+
+{% if d.quick_check %}
+1. **{{ d.quick_check.name }} = a quick service correctness check only**. Run it after each change to check for regressions (accuracy and invalid rate); it takes minutes. It is a reference gate (not used for the verdict; reference accuracy {{ d.quick_check.band }}), so do not use it for performance comparisons. The formal gate is LongBench v2 (see above; tens of minutes to hours per run); run it once more for final confirmation before delivery:
+
+   ```bash
+   # {{ d.quick_check.name }} quick check (reference gate, same protocol as the historical gate, takes minutes)
+   cat > /tmp/quick-check-config.json <<'CFG'
+   {"gate": {"kind": "{{ d.quick_check.kind }}",
+             "stop_tokens": {{ d.quick_check.stop_tokens_json }}{{ d.quick_check.extra_json }}},
+    "served_model_name": "{{ vc.served_model_name }}"}
+   CFG
+   {{ vc.python }} \
+     {{ d.quick_check.script_path }} \
+     "{{ d.endpoint_local }}" \
+     {{ d.quick_check.data }} \
+     /tmp/quick-check-result.json /tmp/quick-check-config.json
+
+   # Correctness gate (LongBench v2): final check before delivery, same protocol as the evaluation gate
+   cat > /tmp/gate-config.json <<'CFG'
+   {"gate": {"kind": "{{ vc.gate.kind }}"{{ d.gate_selftest_extra_json }}},
+    "served_model_name": "{{ vc.served_model_name }}"}
+   CFG
+   {{ vc.python }} \
+     {{ d.longbench_script_path }} \
+     "{{ d.endpoint_local }}" \
+     {{ vc.gate.data }} \
+     /tmp/gate-result.json /tmp/gate-config.json
+   ```
+{% elif vc.gate.kind == "longbench-v2-openai-chat" %}
+1. **LongBench v2 = a service correctness check only**. Run it after each change to check for long-context inference regressions (accuracy and invalid/truncated rate), at concurrency {{ d.longbench_parallel }}; it takes tens of minutes to hours. Do not use it for performance comparisons:
+
+   ```bash
+   cat > /tmp/gate-config.json <<'CFG'
+   {"gate": {"kind": "{{ vc.gate.kind }}"{{ d.gate_selftest_extra_json }}},
+    "served_model_name": "{{ vc.served_model_name }}"}
+   CFG
+   {{ vc.python }} \
+     {{ d.longbench_script_path }} \
+     "{{ d.endpoint_local }}" \
+     {{ vc.gate.data }} \
+     /tmp/gate-result.json /tmp/gate-config.json
+   ```
+{% else %}
+1. **GSM8K = a quick service correctness check only**. Run it after each change to check for regressions (accuracy and invalid rate); it takes minutes. Do not use it for performance comparisons:
+
+   ```bash
+   cat > /tmp/gate-config.json <<'CFG'
+   {"gate": {"kind": "{{ vc.gate.kind }}",
+             "stop_tokens": {{ d.gate_stop_tokens_json }}{{ d.gate_selftest_extra_json }}},
+    "served_model_name": "{{ vc.served_model_name }}"}
+   CFG
+   {{ vc.python }} \
+     {{ d.gsm8k_script_path }} \
+     "{{ d.endpoint_local }}" \
+     {{ vc.gate.data }} \
+     /tmp/gate-result.json /tmp/gate-config.json
+   ```
+{% endif %}
+
+2. **Agentic replay workload = the main tool in the optimization loop** (deterministic and repeatable, with reference throughput {{ vc.performance_baseline_replay.output_throughput | round2 }} tok/s; note that this differs from the rollout baseline of {{ vc.performance_baseline.output_throughput | round2 }}. Replay uses fixed timing, while rollout advances a real agent; optimization gains should move in the same direction for both). This Mooncake replay is synthesized from real Terminal-Bench 2.1 coding-agent trajectories. Its prefill/decode mix, prefix-cache hits, and mixed request lengths reflect real serving behavior. **Use this workload for both bottleneck profiling and before/after optimization comparisons**; tuning only on a single-point stress test will overfit:
+
+   ```bash
+   {{ vc.python }} \
+     {{ d.agent_script_path }} \
+     --backend {{ b.backend }} --base-url "{{ d.endpoint_local }}" \
+     --served-model-name {{ vc.served_model_name }} \
+     --model {{ vc.model_path }} \
+     --tokenizer {{ vc.model_path }} \
+     --dataset-name {{ b.dataset_name }} \
+     --dataset-path {{ d.bench_dataset_path }} \
+     --mooncake-slowdown-factor {{ d.bench_slowdown }} --max-concurrency {{ b.max_concurrency }} \
+     --num-prompts {{ b.num_prompts }} --request-rate inf --seed {{ b.seed }}
+   ```
+
+   Replay the complete timeline at original speed (slowdown {{ d.bench_slowdown }}). For rough tests, reduce `--mooncake-slowdown-factor` to compress time, but formal before/after comparisons must use the same factor. These script copies come from the same source as the trusted copies used by the evaluator in isolated pods; changing your copies does not affect scoring.
+
+3. **Align final confirmation with the rollout protocol**: you cannot reproduce rollout locally (only the evaluation machine has the task sandboxes), but its protocol, tasks, thresholds, and baseline are all public (see above). Final self-check before delivery = {% if d.quick_check %}{{ d.quick_check.name }} quick check within reference-gate tolerance + LongBench v2 gate passes{% elif vc.gate.kind == 'longbench-v2-openai-chat' %}LongBench v2 gate passes{% else %}GSM8K within tolerance{% endif %} + replay throughput not significantly below baseline. The main risk when replay passes but rollout fails is altered model behavior (sampling, speculation, or long-context numerics). Repeatedly regression-test such changes with {% if d.quick_check %}the {{ d.quick_check.name }} quick check{% else %}{{ d.gate_name }}{% endif %} + short replay runs.
+{% endif %}
+## Delivery checks
+
+At the end of the Agent run, checks confirm that `{{ vc.engine_repo }}/launch.sh` exists, is nonempty, and passes `bash -n launch.sh`. A failed check fails the run, with **no fallback**. Arguments may be literals or variables, but their semantics must satisfy the launch.sh contract above; the evaluator actually executes this script.
+
+## Profiling and nontrivial optimizations are encouraged
+
+You have full access to {{ d.debug_scope_phrase }} and are explicitly allowed and encouraged to:
+
+- **Profile**: use {{ d.profiler_tools }} to profile real workloads. You may start small experimental services and run single-operator/single-layer microbenchmarks to locate bottlenecks (experimental artifacts do not enter evaluation; clean up processes before finishing).
+- **Modify source code, not just parameters**: launch-parameter tuning has limited returns. You are encouraged to make **nontrivial optimizations** in {{ d.engine }} Python/operator code, such as attention and hot-operator paths, scheduling and batching logic, memory layouts, or custom kernels for hot operators ({{ d.kernel_stack }}; they must ship with the layer and load on clean nodes).
+- **Make quantitative tradeoffs**: follow actual quality results, the generalizable-optimization contract, and the final evaluation protocol. Measure first, identify the largest bottleneck, then change it. Within the execution budget above, reserve time to validate launch.sh syntax and buildability. Keep a validated, compliant solution and exit normally rather than relying on timeout termination.
+
+{% if environment.get('skills_dir') %}
+
+## Methodology and installed skills
+
+A set of skills is installed in the environment for this task:
+
+- **Read `e2e-infer-opt` first**: it provides the main methodology for this task (baseline and quality gate → profiling → hotspot classification → attribution → microbenchmarking → optimization and regression loop). Its task binding table specifies this task's engine/hardware and companion-skill routing; follow its main loop;
+- Other skills (profiling/perf-breakdown/fusion/kvcache/multistream/quantization, etc.) provide execution details for stages routed by `e2e-infer-opt`. Use them as needed; you do not need to read them all upfront.
+{% endif %}

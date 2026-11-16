@@ -1,0 +1,135 @@
+{
+  "task": "infer-qwen3p8-27b",
+  "baseline_output_throughput": 108.9275,
+  "calibration_source": "Public calibration reference.",
+  "window": {
+    "status": "deadline",
+    "measured": true,
+    "output_tps": 108.92444444444445,
+    "actual_received_output_tokens": 392128,
+    "actual_elapsed_wall_sec": 3600.0,
+    "correctness_gate_run": false,
+    "warmup": "none; cold first request included",
+    "trace_total_requests": 894,
+    "start_unix_sec": 1789594957.315063,
+    "deadline_unix_sec": 1789598557.315063,
+    "counter_mode": "meta_info.completion_tokens",
+    "end_unix_sec": 1789598557.315063,
+    "deadline_dispatch_overshoot_sec": 0.0007465090602636337,
+    "request_counts": {
+      "finished": 171,
+      "partial_deadline": 1,
+      "partial_cancelled": 0,
+      "failure": 0,
+      "not_started": 722,
+      "running": 0
+    },
+    "trace_request_count": 894,
+    "selected_request_count": 894,
+    "requested_output_tokens_total": 1361527,
+    "counter_valid": true,
+    "throughput_definition": "exact output tokens received within fixed window / actual window wall seconds, including in-flight partials, prefill and timestamp waits",
+    "finalized_unix_sec": 1789598557.3164275
+  },
+  "parameters": {
+    "model": "qwen3.8-27b",
+    "context_length": 262144,
+    "concurrency": 1,
+    "duration_sec": 3600.0,
+    "protocol": "token-ids-v1",
+    "seed": 42,
+    "temperature": 0,
+    "ignore_eos": true,
+    "slowdown_factor": 1.0,
+    "num_rounds": 1,
+    "backend": "sglang",
+    "idle_backend": "sglang",
+    "http_connection_reuse": false,
+    "counter_mode": "meta_info.completion_tokens",
+    "stream_options": null,
+    "return_token_ids": false,
+    "warmup_requests": 0,
+    "warmup_timeout_sec": 600.0,
+    "num_prompts": 10000,
+    "window_expected_engines": 1,
+    "stop_when_all_requests_finish": false,
+    "all_requests_required": false
+  },
+  "gate": {
+    "num_questions": 200,
+    "parallel": 64,
+    "latency_sec": 38.747,
+    "accuracy": 0.97,
+    "invalid_rate": 0.0,
+    "output_throughput": 820.844
+  },
+  "reward": {
+    "reward": 0.9999719487222644,
+    "deploy_success": 1,
+    "gate_accuracy": 0.97,
+    "accuracy_within_tolerance": 1,
+    "performance_score": 0.9999719487222644,
+    "request_success_rate": 1.0,
+    "ttft_ms_p50": -1.0,
+    "ttft_ms_p99": -1.0,
+    "tpot_ms_p50": -1.0,
+    "tpot_ms_p99": -1.0,
+    "output_throughput": 108.92444444444445,
+    "benchmark_wall_time_sec": 3600.0
+  },
+  "trace_sha256": "819fdc39b13a59dd62f0497a26cecd1d842cbd6c637e77ca26ae3e2a3668229a",
+  "measured_client_sha256": "e2d704cdfc50992087fba33c2b052a89115727e8b305edafa88ae27ab21475bb",
+  "snapshot_config_sha256": "2f9076d5a870f4b88d78906d809bdc18cd7b65c7aa5f8da299cad289fca12c96",
+  "hashes": {
+    "window/summary.json": "234a00da8a6bc80b9132650b4fe460df222602b97ec6f4e9552ff470b929640c",
+    "window/manifest.json": "b83635abe8c8fc73182a6a15eef45c65d9838f2f5031c27252f0e2b3fcd57d26",
+    "window/requests.jsonl": "413bd4628b6f0cfe2ceefeda02cf9e79e088f0d25cac492152377e269a55d40c",
+    "benchmark-summary.json": "ec94e71d5c5b341671f2c07efbb63ea1e5990cc08212e3527185ee593cffc877",
+    "reward.json": "184745bfbb02ece02213341bf6b2293a6fbc87ae6e05c68b434d1281df9eb3e9",
+    "window-idle-before-gate.json": "0a7ba83beff8a47192e65aa639f1d32cf7da674645b3b3a8a600198cc96f005c"
+  },
+  "post_window_idle": {
+    "status": "idle",
+    "started_unix_sec": 1789598557.6086814,
+    "samples": [
+      {
+        "offset_sec": 1.0047054719179869,
+        "unix_sec": 1789598558.6133869,
+        "metrics_path": "/metrics",
+        "metric_lines": [
+          "sglang:num_running_reqs{engine_type=\"unified\",model_name=\"qwen3.8-27b\",moe_ep_rank=\"0\",pp_rank=\"0\",tp_rank=\"0\"} 0.0",
+          "sglang:num_queue_reqs{engine_type=\"unified\",model_name=\"qwen3.8-27b\",moe_ep_rank=\"0\",pp_rank=\"0\",tp_rank=\"0\"} 0.0"
+        ],
+        "gauges": {
+          "vllm:num_requests_running": {
+            "unlabeled": 0.0
+          },
+          "vllm:num_requests_waiting": {
+            "unlabeled": 0.0
+          }
+        },
+        "idle": true
+      }
+    ],
+    "endpoint": "http://[2605:340:cd51:7700:3f53:a5ae:90ed:f166]:10597",
+    "expected_engines": 1,
+    "timeout_sec": 180.0,
+    "health_status": 200,
+    "models_response": {
+      "object": "list",
+      "data": [
+        {
+          "id": "qwen3.8-27b",
+          "object": "model",
+          "created": 1789598558,
+          "owned_by": "sglang",
+          "root": "qwen3.8-27b",
+          "parent": null,
+          "max_model_len": 262144
+        }
+      ]
+    },
+    "actual_elapsed_wall_sec": 1.0203814432024956,
+    "finalized_unix_sec": 1789598558.6290627
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "infer-llada2p1mini-16b": {
+    "scoring_sha256": "ee66ab2f1e1d1ba02cd3d4a62da1766a6a08fb18b60e8eb098fb0b936e93d173",
+    "files": {
+      "environment/launch.sh": "667b410e9e7746ed8d302fa50127f4377cc85d06467861fd24debbb6d3a874b4",
+      "solution/solve.sh": "56899a609ad7653a8c70a650b8199041f3823a1b7f9fd1d4e8ddf22b43cc78bb",
+      "runtimes/modal-baseline.json": "5bb0470901ebf032233ee5fb73a55b7d7c9b37f752bbc1b44f818477cb94aa1f",
+      "runtimes/open-lite-data.json": "214002190a7b6a08841eb13f55c47b1b771f7b7f44cabbe7b487df2db8e8bb0b",
+      "runtimes/open-lite-model.json": "6a6e424801b0fc4f5d5e34fc9d2cff12f24b26f644c46c2880b462cbce61448f",
+      "runtimes/baseline-history/oracle-reference.json": "3e090d582fa6fb9e16d3b6541ec56715ae7faaf11584a4ced999fa718a00caef"
+    }
+  },
+  "infer-museglimmer-30b": {
+    "scoring_sha256": "d8ddff8ef310f8a2f5a247e0f1bd586e00c37ababa3a7bdafab7d40c797b14aa",
+    "files": {
+      "environment/launch.sh": "b1d47d20d4e94c3fcda6ca563417a33ec8e0462315cd7769055ce32687ce0967",
+      "solution/solve.sh": "50ff7f3a30a6ee5948fdaadac274761840db9128396bbe335a2b43db86abe554",
+      "runtimes/modal-baseline.json": "c1bc29430f8222924dc7ad2ee90c2a6550b8050a2cedf8697afffd55fc270808",
+      "runtimes/open-lite-data.json": "f4ba77cb2e124ef42f0f2ab79c4da1fd319a5abc7927b2157bacd178710ae393",
+      "runtimes/open-lite-model.json": "526db0106b2574b07334137e180f36e6294c879cee15ae1b63f597f4384ca882",
+      "runtimes/baseline-history/oracle-reference.json": "84a51113fe105cdcafbd716286832823704cdff16651060c382b94448792d84c"
+    }
+  },
+  "infer-qwen3p8-27b": {
+    "scoring_sha256": "2091ef07db41845eb42809cc159d2c5f6c0c62fc9cf2660120a729934dadea8f",
+    "files": {
+      "environment/launch.sh": "4713732f67c621683dcc0f364628ca7df35f335cffc45f9a42ecdd70e38a6f1e",
+      "solution/solve.sh": "856aceccd34c5c412df0f81506e2e9d2b013885b47bd1ac230d7ff9e37fa7004",
+      "runtimes/modal-baseline.json": "26cf9010ad616fdcf403d72dfb107cf03695652c6c7534054f763cc13cccbf37",
+      "runtimes/open-lite-data.json": "cbd4f13435305bac8e992557abc451162435f0eabfc5e776e6b690b2477ecf40",
+      "runtimes/open-lite-model.json": "f53c9aea475bdc043b7ba17053852c289fb2d241c2a0271a041b74bfdb6057d2",
+      "runtimes/baseline-history/oracle-reference.json": "2b29739e1cc5e954fb6b74682c5f8375e6332258605c28e560c4a21f10fa2cd9"
+    }
+  },
+  "infer-qwen3vl-32b": {
+    "scoring_sha256": "b3b0282fcc8a4a8f544cf3421b5abc9a1ac44cf37693a18e9eb3cb3c9bb75368",
+    "files": {
+      "environment/launch.sh": "01c6a813d962361afc6912baa337737f14fdc54e02647948216ad3b232343f3a",
+      "solution/solve.sh": "ddb370ad741f8f934567502cd7d1f770244deda9aaad20e85cc04d32526f1b5f",
+      "runtimes/modal-baseline.json": "f8e86296bdc7770c8f43ab006df02c2b8a590a08a49c87b2039106063cc15f79",
+      "runtimes/open-lite-data.json": "5c4c3d80fae0cad1835f4acfd98e258d8ae60b4358d0f54f70259b123efd8242",
+      "runtimes/open-lite-model.json": "aae8274f900f8e8633fdc63f532909d3cf60845276b6e33dccbc07419dba7515",
+      "runtimes/baseline-history/oracle-reference.json": "dd621585e8a1e855c9591b250e2974d9749c6af96ed4171aa5430f4ccec42a7a"
+    }
+  },
+  "infer-wan2p2ti2v-5b": {
+    "scoring_sha256": "60b37b9b9cad1a3a0906ccb48c70e4a0339d36492363bcd89253030a6ca52d4e",
+    "files": {
+      "environment/launch.sh": "402d4881280e994e03cca021f71908a0c29b2eeaa52a7adef52bf992801b7f8d",
+      "solution/solve.sh": "f441aca84cc49d5ed9b10dced128f9689177bb8f1c8c5c8da857df7f2edc5db7",
+      "runtimes/open-lite-data.json": "53ce8d2aaadfb44aab22fe6dd6012630acf746fc73c51fdf6bfbec492a4dcdb0",
+      "runtimes/open-lite-model.json": "60d3bb01c591283aa0dd8260a0563b57b9737e0a127d3aa08fd6c0e3354d08bd",
+      "runtimes/baseline-history/oracle-reference.json": "f1b75bed23967f562a8fc86df5d932cb8b1d0b2a699b25c9518e94020022f964",
+      "runtimes/modal-baseline-h200-v1.json": "d4ff686e3c18ecaf623649505d6432207e6c25fad4acad92e843ff84bac24aa8"
+    }
+  }
+}

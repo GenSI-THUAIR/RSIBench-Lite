@@ -1,0 +1,47 @@
+{
+  "infer-wan2p2ti2v-5b": {
+    "output_throughput": 26.037342677638655,
+    "unit": "videos/hour",
+    "baseline_source": "tasks/infer-wan2p2ti2v-5b/runtimes/modal-baseline-h200-v1.json",
+    "baseline_sha256": "d4ff686e3c18ecaf623649505d6432207e6c25fad4acad92e843ff84bac24aa8",
+    "task_yaml_sha256": "71db01ca1316644f48f16488724d021e9ea33ef4568040086ee12d263e48f6bc",
+    "gpu": "H200",
+    "gpus": 1
+  },
+  "infer-museglimmer-30b": {
+    "output_throughput": 60.47296296296296,
+    "unit": "tokens/s",
+    "baseline_source": "tasks/infer-museglimmer-30b/runtimes/modal-baseline.json",
+    "baseline_sha256": "c1bc29430f8222924dc7ad2ee90c2a6550b8050a2cedf8697afffd55fc270808",
+    "task_yaml_sha256": "47f71d6e926fca9419bac8070d98a3c4c1d93d42824dfa099053f792f83e4c4d",
+    "gpu": "H200",
+    "gpus": 1
+  },
+  "infer-llada2p1mini-16b": {
+    "output_throughput": 90.49270471118129,
+    "unit": "tokens/s",
+    "baseline_source": "tasks/infer-llada2p1mini-16b/runtimes/modal-baseline.json",
+    "baseline_sha256": "5bb0470901ebf032233ee5fb73a55b7d7c9b37f752bbc1b44f818477cb94aa1f",
+    "task_yaml_sha256": "f3b9cb2fe77f88c5d45915b60935c81f5468414aac8a23593724ea805c516713",
+    "gpu": "H200",
+    "gpus": 1
+  },
+  "infer-qwen3p8-27b": {
+    "output_throughput": 202.76907407407407,
+    "unit": "tokens/s",
+    "baseline_source": "tasks/infer-qwen3p8-27b/runtimes/modal-baseline.json",
+    "baseline_sha256": "26cf9010ad616fdcf403d72dfb107cf03695652c6c7534054f763cc13cccbf37",
+    "task_yaml_sha256": "c6ecee8ad56b7b2a466950b45c8505e34c46797b9bd0825884808a84bc9e244e",
+    "gpu": "H200",
+    "gpus": 1
+  },
+  "infer-qwen3vl-32b": {
+    "output_throughput": 243.57331788795216,
+    "unit": "tokens/s",
+    "baseline_source": "tasks/infer-qwen3vl-32b/runtimes/modal-baseline.json",
+    "baseline_sha256": "f8e86296bdc7770c8f43ab006df02c2b8a590a08a49c87b2039106063cc15f79",
+    "task_yaml_sha256": "6b133f6a59482cfa4936645550b33142eec653be07fc405e98897bdaa4da14ef",
+    "gpu": "H200",
+    "gpus": 1
+  }
+}

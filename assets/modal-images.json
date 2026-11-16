@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "images": [
+    {
+      "source": "docker.io/lmsysorg/sglang@sha256:c4d3d12e1d0b907329eac6780695a96824eaffa250d516600e4ee9f3851cfc4a",
+      "pinned": "docker.io/lmsysorg/sglang@sha256:c4d3d12e1d0b907329eac6780695a96824eaffa250d516600e4ee9f3851cfc4a",
+      "digest": "sha256:c4d3d12e1d0b907329eac6780695a96824eaffa250d516600e4ee9f3851cfc4a",
+      "architecture": "amd64",
+      "os": "linux",
+      "tasks": [
+        "infer-llada2p1mini-16b"
+      ]
+    },
+    {
+      "source": "docker.io/lmsysorg/sglang@sha256:e35dfb0beaf6b1fb6619ae0dac9474b5cdda24b81cee7202316e371301425e46",
+      "pinned": "docker.io/lmsysorg/sglang@sha256:e35dfb0beaf6b1fb6619ae0dac9474b5cdda24b81cee7202316e371301425e46",
+      "digest": "sha256:e35dfb0beaf6b1fb6619ae0dac9474b5cdda24b81cee7202316e371301425e46",
+      "architecture": "amd64",
+      "os": "linux",
+      "tasks": [
+        "infer-qwen3p8-27b"
+      ]
+    },
+    {
+      "source": "docker.io/lmsysorg/sglang@sha256:5a40c4b2d1278ea563c9eec6c70a7ca60282067574f11ce8bc636bc46ed3adca",
+      "pinned": "docker.io/lmsysorg/sglang@sha256:5a40c4b2d1278ea563c9eec6c70a7ca60282067574f11ce8bc636bc46ed3adca",
+      "digest": "sha256:5a40c4b2d1278ea563c9eec6c70a7ca60282067574f11ce8bc636bc46ed3adca",
+      "architecture": "amd64",
+      "os": "linux",
+      "tasks": [
+        "infer-qwen3vl-32b"
+      ]
+    },
+    {
+      "source": "docker.io/vllm/vllm-openai@sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d",
+      "pinned": "docker.io/vllm/vllm-openai@sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d",
+      "digest": "sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d",
+      "architecture": "amd64",
+      "os": "linux",
+      "tasks": [
+        "infer-museglimmer-30b",
+        "infer-qwen3ttsbase-1p7b",
+        "infer-wan2p2ti2v-5b"
+      ]
+    }
+  ]
+}

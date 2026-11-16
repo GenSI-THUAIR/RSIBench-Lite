@@ -1,0 +1,77 @@
+{
+  "runtime_spec_sha256": "341b64ecf24e58d5005f7dd3270094eb1964683783e1843e22e581d5af3c26a7",
+  "evidence_sha256": {
+    "calibrate.json": "3d9e50cd5cf95c4d0784b733a1b5b3d1dc939beafe9801bd8fdb84d1f7bb05c3",
+    "benchmark-summary.json": "db348de5deeb1391871583f49f2de69c5fd458e548821046e6a05566f6500253",
+    "runtime-lifecycle.json": "64319630e11ac81e762a1703eb737efab79da53ec571f32f4b6e907ee64049c1",
+    "verifier-config.json": "a0aff448ef326376ccf9d62db0a7d6758d78a527d2782d71e855999043974af8",
+    "inputs.json": "3f17072ad92d8b956c7b9b798c4171d0426d96ee3dad3ce0af4ba84199b92764",
+    "runtime.json": "e99bd6ffc1263ebc4be7f2ab38fec480e6c1a6057a48cef1b888fb0b6a5b5183"
+  },
+  "performance_baseline": {
+    "unit": "tokens/s",
+    "higher_is_better": true,
+    "output_throughput": 80.30918063049465,
+    "status": "CALIBRATED",
+    "source": "historical-evidence",
+    "runtime_spec_sha256": "341b64ecf24e58d5005f7dd3270094eb1964683783e1843e22e581d5af3c26a7",
+    "baseline_conditions": {
+      "protocol": "inference-baseline/1",
+      "resources": {
+        "backend": "modal",
+        "gpu": "H200",
+        "gpus": 1,
+        "serve_cpus": 22,
+        "serve_memory_mb": 232448,
+        "benchmark_cpus": 22,
+        "benchmark_memory_mb": 232448,
+        "benchmark_gpus": 1,
+        "benchmark_gpu_types": [
+          "H200"
+        ]
+      },
+      "image": "docker.io/lmsysorg/sglang@sha256:c4d3d12e1d0b907329eac6780695a96824eaffa250d516600e4ee9f3851cfc4a",
+      "inputs": [
+        {
+          "kind": "data",
+          "manifest_sha256": "214002190a7b6a08841eb13f55c47b1b771f7b7f44cabbe7b487df2db8e8bb0b"
+        },
+        {
+          "kind": "model",
+          "manifest_sha256": "6a6e424801b0fc4f5d5e34fc9d2cff12f24b26f644c46c2880b462cbce61448f"
+        }
+      ],
+      "driver_env": {},
+      "gate": {
+        "kind": "longbench-v2-openai-chat",
+        "data": "/mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-24k-v1.jsonl",
+        "center": 0.389,
+        "tolerance": 0.05,
+        "comparison": "lower_bound",
+        "max_tokens": 12288,
+        "max_concurrency": 4,
+        "num_questions": 36,
+        "stop_tokens": []
+      },
+      "bench_serving": {
+        "arrival_mode": "asap",
+        "backend": "sglang",
+        "dataset_name": "mooncake",
+        "random_input_len": 0,
+        "random_output_len": 0,
+        "random_range_ratio": 1.0,
+        "max_concurrency": 4,
+        "num_prompts": 10000,
+        "seed": 42,
+        "extra_args": [
+          "--dataset-path",
+          "/mnt/rsibench/rsibench/agentic-trace-32k.jsonl",
+          "--mooncake-slowdown-factor",
+          "1.0",
+          "--mooncake-context-length",
+          "32768"
+        ]
+      }
+    }
+  }
+}

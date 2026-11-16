@@ -1,0 +1,66 @@
+{
+  "description": "Single-H20 analytical SOL references for the five Lite tasks.",
+  "source_sha256": {
+    "reference_report": "db4bfb8df94db356635275ba61715ba2c6327e58b0c943965a8a6d3955c4928e",
+    "reference_summary": "13ac673989cbd53fb533db4125932226bbc559f3ac1d496d7fc2fa18d0538eed",
+    "llada_native_routing": "fe9dc2931968a361790d224d94f7f0b312a26706ce831511bcad41730232b942",
+    "llada_method": "2cac0e4b2f8e832ba51c67dbd31d24947b31dc56041766f32d69315a5d389c81"
+  },
+  "results": [
+    {
+      "task": "infer-qwen3p8-27b",
+      "hardware": "1xH20",
+      "unit": "tokens/s",
+      "sol_throughput": 300.2241666666667,
+      "baseline_throughput": 108.9275,
+      "sol_baseline_ratio": 2.756183394153604,
+      "status": "retained_lite_analytical"
+    },
+    {
+      "task": "infer-museglimmer-30b",
+      "hardware": "1xH20",
+      "unit": "tokens/s",
+      "sol_throughput": 71.14194444444445,
+      "baseline_throughput": 47.8075,
+      "sol_baseline_ratio": 1.488091710389467,
+      "status": "retained_lite_analytical"
+    },
+    {
+      "task": "infer-qwen3vl-32b",
+      "hardware": "1xH20",
+      "unit": "tokens/s",
+      "sol_throughput": 301.4007234528259,
+      "baseline_throughput": 106.07938479466918,
+      "sol_baseline_ratio": 2.8412751830737637,
+      "status": "retained_lite_analytical"
+    },
+    {
+      "task": "infer-llada2p1mini-16b",
+      "hardware": "1xH20",
+      "unit": "tokens/s",
+      "sol_throughput": 642.2888515233753,
+      "baseline_throughput": 92.70917754129844,
+      "sol_baseline_ratio": 6.927996435274813,
+      "status": "native_single_round_routing_analytical"
+    },
+    {
+      "task": "infer-wan2p2ti2v-5b",
+      "hardware": "1xH20",
+      "unit": "videos/hour",
+      "sol_throughput": 10.209772756277895,
+      "baseline_throughput": 6.6280430134963435,
+      "sol_baseline_ratio": 1.540390238187691,
+      "status": "retained_lite_analytical"
+    }
+  ],
+  "llada_workload": {
+    "completed_requests": 140,
+    "output_tokens": 57329,
+    "native_forwards": 40458,
+    "moe_layer_histograms": 768702,
+    "analytical_seconds": 89.2573487209494,
+    "moe_routing_validated": true,
+    "physical_hbm_traffic_validated": false,
+    "assumptions": "Each accessed BF16 expert weight is read once per forward; L2 hits, repeated kernel loads and tile padding are not separately modeled. Auxiliary operator and serial execution approximations are retained."
+  }
+}

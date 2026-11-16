@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.agents/
+.harbor_trials
+runs/
+logs/
+jobs/
+
+# Generated task artifacts; task.yaml and shared templates are authoritative.
+tasks/*/task.toml
+tasks/*/tests/verifier-config.json
+tasks/*/instruction.md
+
+# Local authentication stays outside the public source tree.
+.env
+.env.*
+.modal.toml
+*credentials*.json
+*.pem
+*.key

@@ -1,0 +1,23 @@
+[project]
+name = "npu-fly"
+version = "0.1.0"
+description = "Harbor benchmark for LLM inference optimization."
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "harbor==0.21.0",
+    "harbor-rewardkit==0.1.7",
+    # schemas/ 直接 import(此前经 harbor 传递安装,显式声明意图)
+    "jinja2>=3.1.6",
+    "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+modal = ["harbor[modal]==0.21.0", "modal[api-proxy-support]==1.6.1"]
+
+[dependency-groups]
+dev = ["mini-swe-agent==1.12.0", "numpy>=1.26,<3", "pytest>=9,<10", "harbor-rewardkit==0.1.7"]
+
+[tool.uv]
+package = false
+
+# 使用官方 PyPI 包；Modal 集成和评测策略在 harbor_envs/modal 与 verify/ 中实现。

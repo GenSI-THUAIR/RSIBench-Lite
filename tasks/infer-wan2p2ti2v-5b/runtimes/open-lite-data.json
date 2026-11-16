@@ -1,0 +1,95 @@
+{
+  "files": [
+    {
+      "path": "wan22-reference/reference-manifest.json",
+      "bytes": 3921,
+      "sha256": "819b8ce6f902a8f0b20e6d6ede640fcbf16e090b03d691ee287b8e9b92c98d27"
+    },
+    {
+      "path": "wan22-reference/boxing-cats-42.mp4",
+      "bytes": 5938028,
+      "sha256": "a286b09f6779b36baa3521b9667c06817a42ffcab0cf33c5646fe8da7b61c527"
+    },
+    {
+      "path": "wan22-reference/boxing-cats-43.mp4",
+      "bytes": 6151017,
+      "sha256": "e24b89a00917fa61dee283cd846289cf83f084e92d6849f2c533eac281d20879"
+    },
+    {
+      "path": "wan22-reference/meadow-dog-42.mp4",
+      "bytes": 11289307,
+      "sha256": "c66a2dd8a40dc4aa1f0e83c14e0aa719334184bcf78d4e7ddd45e1f24a28960c"
+    },
+    {
+      "path": "wan22-reference/meadow-dog-43.mp4",
+      "bytes": 15101589,
+      "sha256": "424b30a615789f2350ac5ba2c41aadc15b5462a7321803885cd98d01dd0264b1"
+    },
+    {
+      "path": "wan22-calibration-v3/calibration.json",
+      "bytes": 2609,
+      "sha256": "8b316063f30a1adf7410dc60e7584fd079173b5277bf635ed80251dd70924004"
+    },
+    {
+      "path": "wan22-calibration-v3/baseline-1/report.json",
+      "bytes": 14126,
+      "sha256": "8b813530cd3aa74c970ae8b3a5dfe214bccc3d7e171d7e0f6b66ec3aac5a43f3"
+    },
+    {
+      "path": "wan22-calibration-v3/baseline-2/report.json",
+      "bytes": 14128,
+      "sha256": "1e5032d2f3f6206810241d4e05e461657ef9214852f107bc1ac47c6d18311f7c"
+    },
+    {
+      "path": "wan22-calibration-v3/baseline-3/report.json",
+      "bytes": 14126,
+      "sha256": "3859475124c9ba375226167289b60ad59fdcb1e82110ec86a59190e706b499e5"
+    },
+    {
+      "path": "wan22-calibration-v3/known-good/report.json",
+      "bytes": 14492,
+      "sha256": "a15e4e97d6b87f673609aa7dc07be2c7b703b1b470734bf13815223f768535cc"
+    },
+    {
+      "path": "wan22-calibration-v3/static-repeat/report.json",
+      "bytes": 12207,
+      "sha256": "543b3a88bc8aa464e30ce233c211ad2a704ed0c65af396da2db7c13fe99bb384"
+    },
+    {
+      "path": "wan22-calibration-v3/frame-padding/report.json",
+      "bytes": 14500,
+      "sha256": "0507399a9f84ba6527027258761b71a37c618b4ffafa40d26fe448661f6d9a4d"
+    },
+    {
+      "path": "wan22-calibration-v3/downscale-upscale/report.json",
+      "bytes": 14503,
+      "sha256": "85cc0a7ef346adfb6262e97a5f8130300651d6efc31fe93a019be0a09bfff6f2"
+    },
+    {
+      "path": "wan22-calibration-v3/reduced-steps/report.json",
+      "bytes": 14492,
+      "sha256": "95661cb774f139573c7fa83bac8c3b92b23a19d96f32482feea31cbe6b0ff010"
+    },
+    {
+      "path": "wan22-calibration-v3/cfg-disabled/report.json",
+      "bytes": 14492,
+      "sha256": "4990456a8a3efa5f3f7ede5566b6f5331eb57cd626a3ccbca904c0f760fe6e03"
+    },
+    {
+      "path": "wan22-calibration-v3/prompt-ignored/report.json",
+      "bytes": 14271,
+      "sha256": "23c015f711f3650a92a555aeb142e92ca0fbb4f05bc26619686d6bb67ac6557d"
+    },
+    {
+      "path": "wan22-calibration-v3/seed-ignored/report.json",
+      "bytes": 14309,
+      "sha256": "fc3ecb2e7c8a422a75c2c7898361aae5ffacec6fa1761e660f6eb1f74a3e5560"
+    },
+    {
+      "path": "wan22-calibration-v3/prerecorded-replay/report.json",
+      "bytes": 12119,
+      "sha256": "6d1ff40abdc1f7d97e4be96354d716e781008b3dd3d938061520059e8dff7782"
+    }
+  ],
+  "total_bytes": 38654236
+}

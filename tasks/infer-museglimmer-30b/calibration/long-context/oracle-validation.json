@@ -1,0 +1,159 @@
+{
+  "task": "infer-museglimmer-30b",
+  "baseline_output_throughput": 47.8075,
+  "calibration_source": "Public calibration reference.",
+  "window": {
+    "status": "deadline",
+    "measured": true,
+    "output_tps": 47.93666666666667,
+    "actual_received_output_tokens": 172572,
+    "actual_elapsed_wall_sec": 3600.0,
+    "correctness_gate_run": false,
+    "warmup": "none; cold first request included",
+    "trace_total_requests": 936,
+    "start_unix_sec": 1789580171.0351887,
+    "deadline_unix_sec": 1789583771.0351887,
+    "counter_mode": "usage",
+    "end_unix_sec": 1789583771.0351887,
+    "deadline_dispatch_overshoot_sec": 0.0006796075031161308,
+    "request_counts": {
+      "finished": 66,
+      "partial_deadline": 1,
+      "partial_cancelled": 0,
+      "failure": 0,
+      "not_started": 869,
+      "running": 0
+    },
+    "trace_request_count": 936,
+    "selected_request_count": 936,
+    "requested_output_tokens_total": 1448769,
+    "counter_valid": true,
+    "throughput_definition": "exact output tokens received within fixed window / actual window wall seconds, including in-flight partials, prefill and timestamp waits",
+    "finalized_unix_sec": 1789583771.0364542
+  },
+  "parameters": {
+    "model": "muse-glimmer-30b",
+    "context_length": 131072,
+    "concurrency": 1,
+    "duration_sec": 3600.0,
+    "protocol": "token-ids-v1",
+    "seed": 42,
+    "temperature": 0,
+    "ignore_eos": true,
+    "slowdown_factor": 1.0,
+    "num_rounds": 1,
+    "backend": "vllm",
+    "idle_backend": "vllm",
+    "http_connection_reuse": false,
+    "counter_mode": "usage",
+    "stream_options": {
+      "include_usage": true,
+      "continuous_usage_stats": true
+    },
+    "return_token_ids": false,
+    "warmup_requests": 0,
+    "warmup_timeout_sec": 600.0,
+    "num_prompts": 10000,
+    "window_expected_engines": 1,
+    "stop_when_all_requests_finish": false,
+    "all_requests_required": false
+  },
+  "gate": {
+    "num_questions": 200,
+    "parallel": 64,
+    "latency_sec": 166.039,
+    "accuracy": 0.97,
+    "invalid_rate": 0.0,
+    "output_throughput": 679.599,
+    "final_answer_diagnostics": {
+      "valid_final": 200
+    }
+  },
+  "reward": {
+    "reward": 1.0027018075964371,
+    "deploy_success": 1,
+    "gate_accuracy": 0.97,
+    "accuracy_within_tolerance": 1,
+    "performance_score": 1.0027018075964371,
+    "request_success_rate": 1.0,
+    "ttft_ms_p50": -1.0,
+    "ttft_ms_p99": -1.0,
+    "tpot_ms_p50": -1.0,
+    "tpot_ms_p99": -1.0,
+    "output_throughput": 47.93666666666667,
+    "benchmark_wall_time_sec": 3600.0
+  },
+  "trace_sha256": "69c6dc27faa867d06473e48c21bab671a52bada5692d766b9565d0b1629d3c31",
+  "measured_client_sha256": "e2d704cdfc50992087fba33c2b052a89115727e8b305edafa88ae27ab21475bb",
+  "snapshot_config_sha256": "87a8bd9d2f31b77de2e6b67763a85c8bf681b46e45baf614ac21ab19f2c73c16",
+  "hashes": {
+    "window/summary.json": "2c42ea2f33296de14b5817f5ffc311bacaf9ba43ccf03ec8ce6a5c3fc4e704bc",
+    "window/manifest.json": "547eb19d95434959f1f902b19d34f3a3b1a6b87fed961c1e74876209cad2d709",
+    "window/requests.jsonl": "0f166bfb3471c24a4c9013a35bdbba198032bff24ec57324d8db5eadf9a0b819",
+    "benchmark-summary.json": "c5507b68b0d85c48b098736db9d67784bf2a28b285ead0a35f0b66509564f6a3",
+    "reward.json": "7f14e4add32335d5fa10af7c8fec0bc34c4aa3fe951dcd63b91f3a3bae423791",
+    "window-idle-before-gate.json": "3a71902ecbc4cc303e5ac34b6eac2759598e2f1de338e9fc6a4adfd812daba97"
+  },
+  "post_window_idle": {
+    "status": "idle",
+    "started_unix_sec": 1789583771.3033104,
+    "samples": [
+      {
+        "offset_sec": 0.003189929760992527,
+        "unix_sec": 1789583771.3065002,
+        "metrics_path": "/metrics",
+        "metric_lines": [
+          "vllm:num_requests_running{engine=\"0\",model_name=\"muse-glimmer-30b\"} 0.0",
+          "vllm:num_requests_waiting{engine=\"0\",model_name=\"muse-glimmer-30b\"} 0.0",
+          "vllm:num_requests_waiting_by_reason{engine=\"0\",model_name=\"muse-glimmer-30b\",reason=\"capacity\"} 0.0",
+          "vllm:num_requests_waiting_by_reason{engine=\"0\",model_name=\"muse-glimmer-30b\",reason=\"deferred\"} 0.0"
+        ],
+        "gauges": {
+          "vllm:num_requests_running": {
+            "0": 0.0
+          },
+          "vllm:num_requests_waiting": {
+            "0": 0.0
+          }
+        },
+        "idle": true
+      }
+    ],
+    "endpoint": "http://[2605:340:cd51:7700:422:8691:8077:3ab5]:10470",
+    "expected_engines": 1,
+    "timeout_sec": 180.0,
+    "health_status": 200,
+    "models_response": {
+      "object": "list",
+      "data": [
+        {
+          "id": "muse-glimmer-30b",
+          "object": "model",
+          "created": 1789583771,
+          "owned_by": "vllm",
+          "root": "/mnt/rsibench/muse-glimmer-30b-bf16-a4e59da52a7b",
+          "parent": null,
+          "max_model_len": 131072,
+          "permission": [
+            {
+              "id": "modelperm-a1a9b34c06060de8",
+              "object": "model_permission",
+              "created": 1789583771,
+              "allow_create_engine": false,
+              "allow_sampling": true,
+              "allow_logprobs": true,
+              "allow_search_indices": false,
+              "allow_view": true,
+              "allow_fine_tuning": false,
+              "organization": "*",
+              "group": null,
+              "is_blocking": false
+            }
+          ]
+        }
+      ]
+    },
+    "actual_elapsed_wall_sec": 0.012268456630408764,
+    "finalized_unix_sec": 1789583771.3155787
+  }
+}

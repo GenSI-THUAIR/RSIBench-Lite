@@ -1,0 +1,77 @@
+{
+  "task": "infer-qwen3p8-27b",
+  "window": {
+    "status": "deadline",
+    "measured": true,
+    "output_tps": 108.9275,
+    "actual_received_output_tokens": 392139,
+    "actual_elapsed_wall_sec": 3600.0,
+    "correctness_gate_run": false,
+    "warmup": "none; cold first request included",
+    "trace_total_requests": 894,
+    "start_unix_sec": 1789578888.0104883,
+    "deadline_unix_sec": 1789582488.0104883,
+    "counter_mode": "meta_info.completion_tokens",
+    "end_unix_sec": 1789582488.0104883,
+    "deadline_dispatch_overshoot_sec": 0.0010714977979660034,
+    "request_counts": {
+      "finished": 171,
+      "partial_deadline": 1,
+      "partial_cancelled": 0,
+      "failure": 0,
+      "not_started": 722,
+      "running": 0
+    },
+    "trace_request_count": 894,
+    "selected_request_count": 894,
+    "requested_output_tokens_total": 1361527,
+    "counter_valid": true,
+    "throughput_definition": "exact output tokens received within fixed window / actual window wall seconds, including in-flight partials, prefill and timestamp waits",
+    "finalized_unix_sec": 1789582488.0121694
+  },
+  "parameters": {
+    "model": "qwen3.8-27b",
+    "context_length": 262144,
+    "concurrency": 1,
+    "duration_sec": 3600.0,
+    "protocol": "token-ids-v1",
+    "seed": 42,
+    "temperature": 0,
+    "ignore_eos": true,
+    "slowdown_factor": 1.0,
+    "num_rounds": 1,
+    "backend": "sglang",
+    "idle_backend": "sglang",
+    "http_connection_reuse": false,
+    "counter_mode": "meta_info.completion_tokens",
+    "stream_options": null,
+    "return_token_ids": false,
+    "warmup_requests": 0,
+    "warmup_timeout_sec": 600.0,
+    "num_prompts": 10000,
+    "window_expected_engines": 1,
+    "stop_when_all_requests_finish": false,
+    "all_requests_required": false
+  },
+  "gate": {
+    "num_questions": 200,
+    "parallel": 64,
+    "latency_sec": 36.174,
+    "accuracy": 0.975,
+    "invalid_rate": 0.005,
+    "output_throughput": 929.667
+  },
+  "measured_config_sha256": "0cfc73227cfbf4a1fb1337590eb94b7b91a1c3d6b65d6555c9196fb267e04713",
+  "measured_client_sha256": "e2d704cdfc50992087fba33c2b052a89115727e8b305edafa88ae27ab21475bb",
+  "trace_sha256": "819fdc39b13a59dd62f0497a26cecd1d842cbd6c637e77ca26ae3e2a3668229a",
+  "hashes": {
+    "verifier/window/summary.json": "aad0437129fdfb247e647670539afcb6d41dc28a741d1134585d98fb4c2f1f6d",
+    "verifier/window/manifest.json": "88645e028dbd4a4cf62c6e611cdd7d3d4bae060713513660abad512bc380556e",
+    "verifier/window/requests.jsonl": "bf8a4b60dc108cb3f58144c18759cbe96a33566cdccd7f9e54836e7c48b3172b",
+    "verifier/benchmark-summary.json": "d30bec98bf1e5e0071a7bae7c0f651a16cb45fbb57533c381dfeb00a90b9b035"
+  },
+  "environment_sha256": {
+    "launch.sh": "7cfa7881edd1ecfcbbc79db8801f9727896a02bfb15d770e0dded2cfc980afb7"
+  },
+  "calibration_reward_ignored": 0.6845808573880565
+}

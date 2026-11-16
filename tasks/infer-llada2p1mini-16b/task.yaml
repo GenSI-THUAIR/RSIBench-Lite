@@ -1,0 +1,204 @@
+schema_version: '1.4'
+platforms:
+  modal:
+    image: docker.io/lmsysorg/sglang@sha256:c4d3d12e1d0b907329eac6780695a96824eaffa250d516600e4ee9f3851cfc4a
+    model:
+      repository: inclusionAI/LLaDA2.1-mini
+      revision: 20e64e2ad21644d0e5248586ed9c942cdd45de0f
+      volume: rsibench-llada21-bf16-20e64e2a
+      manifest_sha256: 6a6e424801b0fc4f5d5e34fc9d2cff12f24b26f644c46c2880b462cbce61448f
+      manifest: runtimes/open-lite-model.json
+    data:
+      volume: rsibench-llada21-data-d771322d
+      manifest_sha256: 214002190a7b6a08841eb13f55c47b1b771f7b7f44cabbe7b487df2db8e8bb0b
+      manifest: runtimes/open-lite-data.json
+    baseline: runtimes/modal-baseline.json
+task:
+  name: rsibench/infer-llada2p1mini-16b
+  version: 0.1.0
+  description: Optimize SGLang diffusion-language-model serving for LLaDA2.1-mini BF16 on a single H20
+  authors:
+  - name: RSIBench contributors
+  keywords:
+  - inference
+  - deployment
+  - cuda
+  - h20
+  - sglang
+  - performance-tuning
+  - diffusion-language-model
+  - moe
+metadata:
+  category: systems-engineering
+  difficulty: hard
+  display:
+    model: LLaDA2.1-mini(BF16)
+    score_phrase: diffusion decoding throughput
+    gate_phrase: the correctness gate
+    python_row: '`python3` (included in the image with SGLang and its dependencies)'
+  contract:
+    launch_display: '`python3 -m sglang.launch_server` included in the image, with dLLM serving enabled'
+    endpoints:
+    - '`/health`'
+    - '`/generate`'
+    - '`/v1/chat/completions`'
+    - '`/v1/models`'
+    - '`/get_server_info`'
+    max_context: 32768
+    context_at_least: false
+  resources:
+  - label: Bounded-window profiling script (SGLang server-side torch profiler wrapper)
+    path: /mnt/rsibench/rsibench/profile_sglang.py
+environment:
+  cookbook_url: https://docs.sglang.io/cookbook/autoregressive/InclusionAI/LLaDA-2.1
+  image_name: docker.io/lmsysorg/sglang:v0.5.11-cu129
+  os: linux
+  workdir: /workspace/deploy
+  skills_dir: /tmp/harbor-skills
+  build_timeout_sec: 46800.0
+  nodes: 1
+  gpus: 1
+  gpu_types:
+  - NVIDIA_H20
+  cpus: 22
+  memory_mb: 232448
+  storage_mb: 51200
+  env: {}
+  mounts:
+  - /mnt/rsibench/llada21_16b_bf16
+  - /mnt/rsibench/rsibench
+agent:
+  timeout_sec: 28800.0
+  user: root
+verifier:
+  timeout_sec: 54000.0
+  environment_mode: separate
+  environment:
+    os: linux
+    workdir: /workspace/benchmark
+    nodes: 1
+    gpus: 1
+    gpu_types:
+    - NVIDIA_H20
+    cpus: 22
+    memory_mb: 232448
+    storage_mb: 51200
+    mounts:
+    - /mnt/rsibench/llada21_16b_bf16
+    - /mnt/rsibench/rsibench
+    env: {}
+  scoring:
+    python: python3
+    engine_repo: /sgl-workspace/sglang
+    layer_artifact: submit_oci.tar.gz
+    gate:
+      kind: longbench-v2-openai-chat
+      data: /mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-24k-v1.jsonl
+      center: 0.389
+      tolerance: 0.05
+      comparison: lower_bound
+      max_tokens: 12288
+      max_concurrency: 4
+      num_questions: 36
+      stop_tokens: []
+      source: Public calibration reference.
+    gate_gpqa_reference:
+      kind: gpqa-diamond-openai-chat
+      data: /mnt/rsibench/rsibench/gpqa_diamond.jsonl
+      center: 0.449
+      tolerance: 0.08
+      max_tokens: 16384
+      stop_tokens: []
+      source: Public calibration reference.
+    service_label: LLaDA2.1-mini
+    health_timeout_sec: 2400
+    model_path: /mnt/rsibench/llada21_16b_bf16
+    served_model_name: llada2.1-mini
+    bench_serving:
+      arrival_mode: asap
+      backend: sglang
+      script_path: /logs/verifier/vendored_bench_serving.py
+      agent_script_path: /mnt/rsibench/rsibench/benchmarks/vendored_bench_serving-asap-v1-04b4e4e148f3224688a6abd0e3765e8e992e2172d6af981a3a74d2fa60d7e595.py
+      agent_script_pending: false
+      dataset_name: mooncake
+      random_input_len: 0
+      random_output_len: 0
+      random_range_ratio: 1.0
+      max_concurrency: 4
+      num_prompts: 10000
+      seed: 42
+      extra_args:
+      - --dataset-path
+      - /mnt/rsibench/rsibench/agentic-trace-32k.jsonl
+      - --mooncake-slowdown-factor
+      - '1.0'
+      - --mooncake-context-length
+      - '32768'
+    performance_baseline:
+      unit: tokens/s
+      higher_is_better: true
+      output_throughput: 92.70917754129844
+      source: Public calibration reference.
+      protocol: token-ids-v1 mooncake agentic-trace-32k.jsonl, context 32768, block 128, max_concurrency 4, slowdown
+        1.0, seed 42, rounds 1
+      extra:
+        benchmark_source_sha256: 765b2c418e282194180bc1570aa87a55f9d7a3a3e023568776b0615601bf256a
+        result_sha256: 4f2800302d47611f06149ab74a7bf22741cf9cdb36695348749ba315df82f725
+        duration: 618.3745937608182
+        completed: 140
+        total_input_tokens: 3301157
+        total_output_tokens: 57329
+        request_throughput: 0.22639998701846853
+        input_throughput: 5338.442156756618
+        output_throughput: 92.70917754129844
+        mean_e2e_latency_ms: 16489.540369968327
+        median_e2e_latency_ms: 11627.358045428991
+        p99_e2e_latency_ms: 77586.53623737392
+        mean_ttft_ms: 14368.003143316933
+        median_ttft_ms: 10688.298899680376
+        p99_ttft_ms: 71294.78902038185
+        mean_tpot_ms: 5.961826212119684
+        median_tpot_ms: 6.417305072185057
+        p99_tpot_ms: 13.713647873381793
+        mean_itl_ms: 5.396956036801584
+        median_itl_ms: 4.199772025458515
+        p95_itl_ms: 9.517219266854227
+        p99_itl_ms: 14.286950541039309
+        concurrency: 3.7332317257013425
+      gate_reference:
+        kind: gpqa-diamond-openai-chat
+        accuracy: 0.444
+        invalid_rate: 0.025
+        latency_sec: 2469.445
+    bench_serving_random:
+      backend: sglang
+      script_path: /sgl-workspace/sglang/python/sglang/bench_serving.py
+      dataset_name: random
+      random_input_len: 1000
+      random_output_len: 1000
+      random_range_ratio: 1.0
+      max_concurrency: 100
+      num_prompts: 500
+      seed: 42
+      extra_args:
+      - --dataset-path
+      - /mnt/rsibench/rsibench/ShareGPT_V3_unfiltered_cleaned_split.json
+    performance_baseline_random:
+      output_throughput: 431.32209029469453
+      source: Public calibration reference.
+      protocol: SGLang cookbook random input=1000 output=1000 concurrency=100 prompts=500 seed=42
+      extra:
+        duration_sec: 1159.2265067119151
+        total_input_tokens: 500000
+        total_output_tokens: 500000
+        total_output_tokens_retokenized: 335519
+        request_success_rate: 1.0
+    gate_gsm8k_reference:
+      kind: gsm8k-openai-chat
+      data: /mnt/rsibench/rsibench/gsm8k_test.jsonl
+      center: 0.895
+      tolerance: 0.05
+      stop_tokens:
+      - <|role_end|>
+      - <|endoftext|>
+      source: Public calibration reference.

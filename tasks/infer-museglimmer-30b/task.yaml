@@ -1,0 +1,221 @@
+schema_version: '1.4'
+task:
+  name: rsibench/infer-museglimmer-30b
+  version: 0.1.0
+  description: Optimize vLLM for official Muse-Glimmer-30B BF16 text inference on one H20 using explicit OCI filesystem-layer
+    submissions
+  authors:
+  - name: RSIBench contributors
+  keywords:
+  - inference
+  - deployment
+  - cuda
+  - h20
+  - vllm
+  - performance-tuning
+  - dense
+  - text-only
+metadata:
+  category: systems-engineering
+  difficulty: hard
+  display:
+    model: Muse-Glimmer-30B(BF16, text-only)
+    score_phrase: long-context text throughput
+    gate_phrase: the complete final-answer correctness gate
+    python_row: '`python3` (vLLM is included in the image; the runtime package must come from the designated source
+      repository)'
+  contract:
+    launch_display: '`python3 -m vllm.entrypoints.openai.api_server` included in the image'
+    endpoints:
+    - '`/health`'
+    - '`/v1/chat/completions`'
+    - '`/v1/completions`'
+    - '`/v1/models`'
+    max_context: 131072
+    context_at_least: true
+    deploy_note: official BF16 checkpoint; text-only on one H20, with quantization and speculative decoding disabled
+environment:
+  cookbook_url: https://github.com/vllm-project/recipes/blob/main/models/meta-models/Muse-Glimmer-30B.yaml
+  image_name: docker.io/vllm/vllm-openai:v0.28.0-cu129
+  os: linux
+  workdir: /workspace/deploy
+  skills_dir: /tmp/harbor-skills
+  build_timeout_sec: 46800.0
+  nodes: 1
+  gpus: 1
+  gpu_types:
+  - NVIDIA_H20
+  cpus: 22
+  memory_mb: 232448
+  storage_mb: 51200
+  env: {}
+  mounts:
+  - /mnt/rsibench/muse-glimmer-30b-bf16-a4e59da52a7b
+  - /mnt/rsibench/rsibench
+agent:
+  timeout_sec: 28800.0
+  user: root
+verifier:
+  timeout_sec: 61200.0
+  environment_mode: separate
+  environment:
+    os: linux
+    workdir: /workspace/benchmark
+    nodes: 1
+    gpus: 1
+    gpu_types:
+    - NVIDIA_H20
+    cpus: 22
+    memory_mb: 232448
+    storage_mb: 51200
+    mounts:
+    - /mnt/rsibench/muse-glimmer-30b-bf16-a4e59da52a7b
+    - /mnt/rsibench/rsibench
+    env: {}
+  scoring:
+    python: python3
+    engine_repo: /vllm-workspace/vllm
+    layer_artifact: submit_oci.tar.gz
+    gate:
+      kind: longbench-v2-openai-chat
+      data: /mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-128k-v1.jsonl
+      center: 0.63
+      tolerance: 0.05
+      comparison: lower_bound
+      max_tokens: 32768
+      max_concurrency: 4
+      stop_tokens: []
+      source: Public calibration reference.
+    gate_gsm8k_reference:
+      kind: gsm8k-openai-chat
+      max_tokens: 32768
+      strict_final_answer: true
+      agent_script_path: /mnt/rsibench/rsibench/gates/gsm8k_eval-chat-options-v1-e08d602c6a6b6b61ce7d6807759e162fa5550e1bea2556a143ccdffcbd3bd70f.py
+      data: /mnt/rsibench/rsibench/gsm8k_test.jsonl
+      center: 0.975
+      tolerance: 0.05
+      stop_tokens: []
+      source: Public calibration reference.
+    service_label: Muse-Glimmer-30B
+    health_timeout_sec: 3600
+    model_path: /mnt/rsibench/muse-glimmer-30b-bf16-a4e59da52a7b
+    served_model_name: muse-glimmer-30b
+    bench_serving:
+      arrival_mode: asap
+      backend: vllm
+      script_path: /logs/verifier/vendored_bench_serving.py
+      agent_script_path: /mnt/rsibench/rsibench/benchmarks/vendored_bench_serving-asap-v1-04b4e4e148f3224688a6abd0e3765e8e992e2172d6af981a3a74d2fa60d7e595.py
+      agent_script_pending: false
+      dataset_name: mooncake
+      random_input_len: 0
+      random_output_len: 0
+      random_range_ratio: 1.0
+      max_concurrency: 1
+      window_duration_sec: 3600
+      window_full_duration: true
+      window_expected_engines: 1
+      trace_sha256: 69c6dc27faa867d06473e48c21bab671a52bada5692d766b9565d0b1629d3c31
+      num_prompts: 10000
+      seed: 42
+      extra_args:
+      - --dataset-path
+      - /mnt/rsibench/rsibench/agentic-trace-128k.jsonl
+      - --mooncake-slowdown-factor
+      - '1.0'
+      - --mooncake-context-length
+      - '131072'
+      bench_timeout_sec: 14400
+      bench_timeout_note: C1固定3600秒计分；外层预算包含trace/词表准备及后置gate，不扩大计分窗口。
+    performance_baseline:
+      unit: tokens/s
+      higher_is_better: true
+      output_throughput: 47.8075
+      status: CALIBRATED
+      source: Public calibration reference.
+      protocol: c1-fixed-window-token-ids-v1 mooncake agentic-trace-128k.jsonl, context 131072, backend vllm, max_concurrency
+        1, window3600s/full_duration=true, engines1, warmup_requests=0, slowdown1.0, seed42
+      extra:
+        trace_sha256: 69c6dc27faa867d06473e48c21bab671a52bada5692d766b9565d0b1629d3c31
+        benchmark_source_sha256: 765b2c418e282194180bc1570aa87a55f9d7a3a3e023568776b0615601bf256a
+        measured_client_sha256: 3b5445bb5533d8cebdc41045e9f157ecf3ca95f6c5712df887ba0b725da31d83
+        measured_config_sha256: 201acb3b3b8105a50178d876f9d4a47a7a5779920b5877b6f7e08aaa176ff478
+        canonical_launch_sha256: c46fc367d8662d0c658cde8c26edbc5b43b5a5a29c7b1d967a4a2906340c7465
+        measurement_manifest: tasks/infer-museglimmer-30b/calibration/long-context/baseline.json
+        completed_requests: 66
+        partial_deadline: 1
+        not_started: 869
+        total_output_tokens: 172107
+        benchmark_duration_sec: 3600
+        request_success_rate: 1.0
+        warmup_requests: 0
+        measurement_manifest_sha256: e1e062428ad9e839bbf6e7fb39944f28f6edc5b38e5a704351f4cf708b3e5749
+        evidence_bytes: 207444
+        evidence_sha256: 339f3b5bc7bf61733303539ad1e4f07977187a57506af5eb571002cb08c02497
+        oracle_ci:
+          reward: 1.0027018075964371
+          output_throughput: 47.93666666666667
+          measurement_manifest: tasks/infer-museglimmer-30b/calibration/long-context/oracle-validation.json
+          measurement_manifest_sha256: c679773c442b444599cdb1ee797c58c493e917f40a1c7469392f1272bdd0ec1c
+          evidence_bytes: 209970
+          evidence_sha256: 2cfdc4a2a631f4ca05c5b4d574e1a298f1b5d0786234df125b1ee9fdbf6cd599
+      gate_reference:
+        kind: gsm8k-openai-chat
+        num_questions: 200
+        latency_sec: 165.387
+        accuracy: 0.97
+        invalid_rate: 0.005
+        final_answer_diagnostics:
+          valid_final: 199
+          request_error: 1
+    performance_baseline_pre_256k_window:
+      unit: tokens/s
+      higher_is_better: true
+      output_throughput: 131.1512174932936
+      source: Public calibration reference.
+      protocol: token-ids-v1 mooncake agentic-trace-64k.jsonl, context 65536, block 128, backend vllm, max_concurrency
+        4, slowdown 1.0, seed 42, rounds 1
+      extra:
+        trace_sha256: 35ac1eed4c6678847463b6eade6a643e6c0ca3a8779a9f554780ed564a10ed96
+        benchmark_source_sha256: 765b2c418e282194180bc1570aa87a55f9d7a3a3e023568776b0615601bf256a
+        result_sha256: c0b8cf99ab353a72f68b08a45197d748eab18ae3ef1c24dfe705cc060db01579
+        summary_sha256: ea327649f45f617a588bad163d19ec953a6ba3eea2aa74cf4fb0dbe6461e164c
+        archive_sha256: 8a903796b856c4d82daf24c4f6d3603e5a0d1f6c63cb656ec4831d8e00493467
+        duration: 2260.0857671424747
+        wrapper_wall_time_sec: 2288.227
+        completed: 193
+        request_success_rate: 1.0
+        total_input_tokens: 7528237
+        total_output_tokens: 296413
+        request_throughput: 0.08539498934326653
+        input_throughput: 3330.9519087491444
+        output_throughput: 131.1512174932936
+        median_ttft_ms: 509.42476838827133
+        p99_ttft_ms: 10555.947037935179
+        median_tpot_ms: 19.754094605682116
+        p99_tpot_ms: 45.193978673080096
+        median_itl_ms: 19.795801490545273
+        p95_itl_ms: 39.84211087226868
+        p99_itl_ms: 40.58442831039429
+      gate_reference:
+        kind: gsm8k-openai-chat
+        accuracy: 0.975
+        invalid_rate: 0.0
+        num_questions: 200
+        valid_final: 200
+        latency_sec: 157.678
+platforms:
+  modal:
+    image: docker.io/vllm/vllm-openai@sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d
+    entrypoint: []
+    model:
+      repository: meta-models/Muse-Glimmer-30B
+      revision: a4e59da52a7bc87ae7251dd5545c0dd437c44b68
+      volume: rsibench-muse-glimmer-bf16-a4e59da5
+      manifest_sha256: 526db0106b2574b07334137e180f36e6294c879cee15ae1b63f597f4384ca882
+      manifest: runtimes/open-lite-model.json
+    data:
+      volume: rsibench-open-lite-muse-data-v1
+      manifest_sha256: f4ba77cb2e124ef42f0f2ab79c4da1fd319a5abc7927b2157bacd178710ae393
+      manifest: runtimes/open-lite-data.json
+    setup: runtimes/open-lite-setup.sh
+    baseline: runtimes/modal-baseline.json

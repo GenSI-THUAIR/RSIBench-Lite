@@ -1,0 +1,30 @@
+{
+  "architectures": ["Wan2_2TI2VForVideoGeneration"],
+  "model_type": "wan2_2_ti2v",
+  "transformer_config": {
+    "_class_name": "WanTransformer3DModel",
+    "attention_head_dim": 128,
+    "ffn_dim": 14336,
+    "freq_dim": 256,
+    "in_channels": 48,
+    "num_attention_heads": 24,
+    "num_layers": 30,
+    "out_channels": 48,
+    "patch_size": [1, 2, 2],
+    "text_dim": 4096
+  },
+  "text_encoder_config": {
+    "d_ff": 10240,
+    "d_model": 4096,
+    "model_max_length": 512,
+    "num_heads": 64,
+    "num_layers": 24,
+    "vocab_size": 256384
+  },
+  "vae_config": {
+    "decoder_base_dim": 256,
+    "scale_factor_spatial": 16,
+    "scale_factor_temporal": 4,
+    "z_dim": 48
+  }
+}

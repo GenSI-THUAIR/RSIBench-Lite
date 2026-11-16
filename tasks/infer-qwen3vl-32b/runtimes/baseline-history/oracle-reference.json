@@ -1,0 +1,78 @@
+{
+  "runtime_spec_sha256": "29884373de64ceb94ee2d3f2d3f5aa307ba05584dfe3fe5ecd442c45974e710d",
+  "evidence_sha256": {
+    "calibrate.json": "8a2124042aeb610469d62bf2a467f78e0f4d4dd53538dd14add3b08da4602415",
+    "benchmark-summary.json": "b8221bfae91d83caa09982fc25744263ab14db4f92379e17a9e586b75f6fef58",
+    "runtime-lifecycle.json": "6fc563c5c507f4c82ecede2bcc1085779122f886577722eaad3ede14260d643f",
+    "verifier-config.json": "d15a274658a0a72fc655dc876896dd089612b29417ba2299f3039e2666eb37ac",
+    "inputs.json": "0ec6add4ef000566cbb0564ab7594dd90d4830e32baa9e97d73ed74328309c1a",
+    "runtime.json": "4bf4771cdb9e175d2757dc1da48aa381eae08fba3e4ac5df07c15d6489ad504d"
+  },
+  "performance_baseline": {
+    "unit": "tokens/s",
+    "higher_is_better": true,
+    "output_throughput": 263.22927692298606,
+    "status": "CALIBRATED",
+    "source": "historical-evidence",
+    "runtime_spec_sha256": "29884373de64ceb94ee2d3f2d3f5aa307ba05584dfe3fe5ecd442c45974e710d",
+    "baseline_conditions": {
+      "protocol": "inference-baseline/1",
+      "resources": {
+        "backend": "modal",
+        "gpu": "H200",
+        "gpus": 1,
+        "serve_cpus": 22,
+        "serve_memory_mb": 232448,
+        "benchmark_cpus": 22,
+        "benchmark_memory_mb": 232448,
+        "benchmark_gpus": 1,
+        "benchmark_gpu_types": [
+          "H200"
+        ]
+      },
+      "image": "docker.io/lmsysorg/sglang@sha256:5a40c4b2d1278ea563c9eec6c70a7ca60282067574f11ce8bc636bc46ed3adca",
+      "inputs": [
+        {
+          "kind": "data",
+          "manifest_sha256": "5c4c3d80fae0cad1835f4acfd98e258d8ae60b4358d0f54f70259b123efd8242"
+        },
+        {
+          "kind": "model",
+          "manifest_sha256": "aae8274f900f8e8633fdc63f532909d3cf60845276b6e33dccbc07419dba7515"
+        }
+      ],
+      "driver_env": {},
+      "gate": {
+        "kind": "mmmu-openai-chat",
+        "num_questions": 847,
+        "data": "/mnt/rsibench/rsibench/mmmu_val_mcq.jsonl",
+        "center": 0.7273,
+        "tolerance": 0.05,
+        "stop_tokens": []
+      },
+      "bench_serving": {
+        "backend": "sglang",
+        "agent_script_env": {
+          "HARBOR_BENCH_SERVING": "/sgl-workspace/sglang/python/sglang/bench_serving.py"
+        },
+        "dataset_name": "image",
+        "random_input_len": 2048,
+        "random_output_len": 256,
+        "random_range_ratio": 1.0,
+        "max_concurrency": 8,
+        "num_prompts": 32,
+        "seed": 42,
+        "extra_args": [
+          "--image-count",
+          "1",
+          "--image-resolution",
+          "1080p",
+          "--image-format",
+          "jpeg",
+          "--image-content",
+          "random"
+        ]
+      }
+    }
+  }
+}

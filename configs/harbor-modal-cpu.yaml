@@ -1,0 +1,47 @@
+# 手写运行配置；run_task.sh 启动时与每题 task.yaml 整合。
+jobs_dir: jobs
+n_attempts: 1
+n_concurrent_trials: 1
+agents:
+- name: oracle
+environment:
+  import_path: harbor_envs.modal:ModalEnvironment
+  delete: true
+  kwargs:
+    app_name: rsibench-open-lite
+    sandbox_timeout_secs: 86400
+verifier:
+  import_path: verify.inference.runtime_infer_verifier:RuntimeInferVerifier
+  kwargs:
+    mode: score
+  disable: true
+tasks:
+- path: tasks/infer-qwen3p8-27b
+- path: tasks/infer-museglimmer-30b
+- path: tasks/infer-qwen3vl-32b
+- path: tasks/infer-llada2p1mini-16b
+- path: tasks/infer-wan2p2ti2v-5b
+runtime:
+  resources:
+    agent:
+      nodes: 1
+      gpus: 0
+      gpu_types: []
+      cpus: 4
+      memory_mb: 16384
+      storage_mb: null
+    benchmark:
+      nodes: 1
+      gpus: 0
+      gpu_types: []
+      cpus: 4
+      memory_mb: 16384
+      storage_mb: null
+    serve:
+      nodes: 1
+      gpus: 1
+      gpu_types:
+      - H200
+      cpus: 8
+      memory_mb: 131072
+      storage_mb: null

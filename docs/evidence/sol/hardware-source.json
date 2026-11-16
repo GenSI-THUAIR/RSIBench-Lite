@@ -1,0 +1,13 @@
+{
+  "url": "https://www.nvidia.com/en-us/data-center/h200/",
+  "html_sha256": "bdef32b36e8a704fa269c54f44fddb0de25020c6b29870d077be7af85c2e3642",
+  "hardware_assumption": "H200 SXM, single GPU; SKU not measured in this analysis",
+  "official_sparse_bfloat16_tflops": 1979,
+  "official_sparse_fp8_tflops": 3958,
+  "dense_bfloat16_tflops": 989.5,
+  "dense_fp8_tflops": 1979.0,
+  "fp32_tflops": 67,
+  "hbm_bandwidth_bytes_per_second": 4800000000000,
+  "footnote": "2 With sparsity.",
+  "catalog_rounding_note": "AISimulate catalog uses 989/1978; this analysis uses 989.5/1979 from the official sparse table divided by two."
+}

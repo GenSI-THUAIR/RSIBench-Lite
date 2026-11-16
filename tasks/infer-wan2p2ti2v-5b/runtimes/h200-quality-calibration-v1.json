@@ -1,0 +1,183 @@
+{
+  "schema": "modal-video-quality-calibration/1",
+  "hardware": {
+    "model": "NVIDIA H200",
+    "count": 1,
+    "driver": "610.57.04"
+  },
+  "reference_manifest_sha256": "5e0d0006a244c64f6092b1ec76da00aa05ba9cc2b5399dae2fb32d83cb42bab4",
+  "receipt_sha256": "7d406c9dd7a605ac8e6c3da012c0fe72209baf4fdd88e6f92818471f40f21592",
+  "protocol_sha256": "d60fcccf8ea7e940fc0b018397c0639ca18585efab949853a10d32758d557633",
+  "calibration_plan_sha256": "12ff9e3eb57590ab507cdb609abba449e3a97bcd8e824e6bbb221231dd2a8cef",
+  "original_policy_sha256": "d009eaeb15869f53604d7500eaeb73b9a0f40c7c14b623737349c0179ef01278",
+  "quality": {
+    "expected_video_codec": "h264",
+    "expected_fps": 24,
+    "expected_frame_count": 121,
+    "duration_tolerance_sec": 0.001,
+    "timestamp_tolerance_sec": 0.0001,
+    "lpips_max": 0.3398561805240379,
+    "lpips_worst_frame_max": 0.44284312427043915,
+    "temporal_delta_mae_max": 0.07899076144862563,
+    "temporal_delta_worst_max": 0.15622975171196002,
+    "motion_ratio_min": 0.9179051569083884,
+    "motion_ratio_max": 1.0285385892314447
+  },
+  "formula_evidence": {
+    "lpips_max": {
+      "positive_envelope": 0.3382344718807,
+      "nearest_negative": 0.34472130645405163,
+      "fraction": 0.25
+    },
+    "lpips_worst_frame_max": {
+      "positive_envelope": 0.4414716362953186,
+      "nearest_negative": 0.4469575881958008,
+      "fraction": 0.25
+    },
+    "temporal_delta_mae_max": {
+      "positive_envelope": 0.07892570778915395,
+      "nearest_negative": 0.07918592242704066,
+      "fraction": 0.25
+    },
+    "temporal_delta_worst_max": {
+      "positive_envelope": 0.15401137907822912,
+      "nearest_negative": 0.16288486961315268,
+      "fraction": 0.25
+    },
+    "motion_ratio_min": {
+      "positive_envelope": 0.9185160350638133,
+      "nearest_negative": 0.9160725224421137,
+      "fraction": 0.25
+    },
+    "motion_ratio_max": {
+      "positive_envelope": 1.007632175118205,
+      "nearest_negative": 1.091257831571164,
+      "fraction": 0.25
+    }
+  },
+  "verdicts": [
+    {
+      "run_id": "baseline-1",
+      "family": "baseline",
+      "passed": true
+    },
+    {
+      "run_id": "baseline-2",
+      "family": "baseline",
+      "passed": true
+    },
+    {
+      "run_id": "baseline-3",
+      "family": "baseline",
+      "passed": true
+    },
+    {
+      "run_id": "known-good",
+      "family": "known-good",
+      "passed": true
+    },
+    {
+      "run_id": "static-repeat",
+      "family": "static-repeat",
+      "passed": false
+    },
+    {
+      "run_id": "frame-padding",
+      "family": "frame-padding",
+      "passed": false
+    },
+    {
+      "run_id": "downscale-upscale",
+      "family": "downscale-upscale",
+      "passed": false
+    },
+    {
+      "run_id": "reduced-steps",
+      "family": "reduced-steps",
+      "passed": false
+    },
+    {
+      "run_id": "cfg-disabled",
+      "family": "cfg-disabled",
+      "passed": false
+    },
+    {
+      "run_id": "prompt-ignored",
+      "family": "prompt-ignored",
+      "passed": false
+    },
+    {
+      "run_id": "seed-ignored",
+      "family": "seed-ignored",
+      "passed": false
+    },
+    {
+      "run_id": "prerecorded-replay",
+      "family": "prerecorded-replay",
+      "passed": false
+    }
+  ],
+  "bindings": [
+    {
+      "run_id": "baseline-1",
+      "family": "baseline",
+      "measurement_sha256": "f5d48da52057323588368fc9877cbe4da5cb5930b4d7dbd40f246192c625f5b2"
+    },
+    {
+      "run_id": "baseline-2",
+      "family": "baseline",
+      "measurement_sha256": "093d373a86ac72528f3dc25ea489e4cba06f647c9d35519e209413bf5d2181ed"
+    },
+    {
+      "run_id": "baseline-3",
+      "family": "baseline",
+      "measurement_sha256": "2fa566540d626e73837519ff14bf30eea1ee5193cc32e0606911177ee18d2255"
+    },
+    {
+      "run_id": "known-good",
+      "family": "known-good",
+      "measurement_sha256": "07d976150a34167491cf03abbde3874fe105695bd5eac64cebdfe207888c12fb"
+    },
+    {
+      "run_id": "static-repeat",
+      "family": "static-repeat",
+      "measurement_sha256": "8a1cc20c177d1f7e44f676e6529ec8401bd48243345d80d98c83aca8f1e61c3c"
+    },
+    {
+      "run_id": "frame-padding",
+      "family": "frame-padding",
+      "measurement_sha256": "80ab073df8251258567694d365984a7f093aa89328227590ce21761b64cd55ac"
+    },
+    {
+      "run_id": "downscale-upscale",
+      "family": "downscale-upscale",
+      "measurement_sha256": "e5c8ce4f2ac298ac0068273c8d28e077354e54e1f1cec8f642bd06a11ec0c3fb"
+    },
+    {
+      "run_id": "reduced-steps",
+      "family": "reduced-steps",
+      "measurement_sha256": "2a95e0d37463b379560aca49265ecba125a61c4f944879bb20e445987380072b"
+    },
+    {
+      "run_id": "cfg-disabled",
+      "family": "cfg-disabled",
+      "measurement_sha256": "f5252d780e42efc5c38f53a0167311efd269890f95ef93885a81f5a100a753c1"
+    },
+    {
+      "run_id": "prompt-ignored",
+      "family": "prompt-ignored",
+      "measurement_sha256": "fa5b33f58b3b448a7bc1890b3e3c2c6aa0950cf6864f2921ca16728d9ee5534c"
+    },
+    {
+      "run_id": "seed-ignored",
+      "family": "seed-ignored",
+      "measurement_sha256": "5dff66cc29854f0550b7f725c7d44995def567c42b8c31546db885e2ec2fc221"
+    },
+    {
+      "run_id": "prerecorded-replay",
+      "family": "prerecorded-replay",
+      "measurement_sha256": "cbb7444141f6916e3b5eb99ea2904d0ef883b8d9d07619258a28637f1be46671"
+    }
+  ],
+  "performance_note": "Local control-collection timings are supplemental; performance denominator requires three native Harbor calibrations."
+}

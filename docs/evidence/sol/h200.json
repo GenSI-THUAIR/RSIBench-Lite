@@ -1,0 +1,1120 @@
+{
+  "description": "Single-H200 SXM analytical SOL references for the five Lite tasks.",
+  "calculation_receipts": {
+    "four-tasks.json": "ff3510997e6850544a2102e9b2267d4af3800081ff0f87b44a90d08c43a14749",
+    "llada.json": "39e7fa7d4b4eda211ccaedad40b51f579175a3563417e4570df2ee06175cfe2c"
+  },
+  "results": [
+    {
+      "task": "infer-qwen3p8-27b",
+      "unit": "tokens/s",
+      "hardware": "H200",
+      "protocol": "fixed_window_3600",
+      "status": "historical_prefix_rate_only",
+      "sol_throughput_estimate": 395.41513447046106,
+      "h200_baseline_throughput": 202.76907407407407,
+      "sol_baseline_ratio_estimate": 1.9500761458624158,
+      "exact_h200_fixed_window_throughput": null,
+      "official_reward": null,
+      "h20_published_throughput": 300.2241666666667,
+      "h20_reproduction_error_ms": 7.916241884231567e-09,
+      "hardware_speedup_same_work": 1.3169697566187397,
+      "selected_output_tokens": 1080807,
+      "h20": {
+        "selected_ms": 3599736.0941887833,
+        "available_ms": 3651303.321382603,
+        "selected_prefill_ms": 420349.1729933386,
+        "selected_decode_ms": 3179386.9211954447,
+        "selected_vision_ms": 0.0,
+        "first_round_ms": null,
+        "vision_ms_per_call": 0.0,
+        "vision_operations": [],
+        "estimator": "op_level"
+      },
+      "h200": {
+        "selected_ms": 2733347.5777233816,
+        "available_ms": 2771847.789725882,
+        "selected_prefill_ms": 68766.98680790246,
+        "selected_decode_ms": 2664580.5909154788,
+        "selected_vision_ms": 0.0,
+        "first_round_ms": null,
+        "vision_ms_per_call": 0.0,
+        "vision_operations": [],
+        "estimator": "op_level"
+      },
+      "workload_file": "docs/evidence/sol/infer-qwen3p8-27b-workload.json.gz",
+      "workload_sha256": "7de93b3e48b24bd806bf6d7917dfeec32788e3c758e1d8591e3dac19ca0411f9",
+      "limitation": "Historical SGLang MTP acceptance/cache trajectory; approximate MTP operator cost; no H200 native capture.",
+      "h200_record_coverage_seconds": 2771.847789725882,
+      "missing_window_seconds": 828.1522102741178,
+      "baseline_source": {
+        "path": "tasks/infer-qwen3p8-27b/runtimes/modal-baseline.json",
+        "keys": [
+          "performance_baseline"
+        ]
+      },
+      "baseline_source_sha256": "26cf9010ad616fdcf403d72dfb107cf03695652c6c7534054f763cc13cccbf37"
+    },
+    {
+      "task": "infer-museglimmer-30b",
+      "unit": "tokens/s",
+      "hardware": "H200",
+      "protocol": "fixed_window_3600",
+      "status": "historical_prefix_rate_only",
+      "sol_throughput_estimate": 88.55092098804704,
+      "h200_baseline_throughput": 60.47296296296296,
+      "sol_baseline_ratio_estimate": 1.464305974924374,
+      "exact_h200_fixed_window_throughput": null,
+      "official_reward": null,
+      "h20_published_throughput": 71.14194444444445,
+      "h20_reproduction_error_ms": -2.514570951461792e-08,
+      "hardware_speedup_same_work": 1.2447064010649107,
+      "selected_output_tokens": 256111,
+      "h20": {
+        "selected_ms": 3599996.4486667053,
+        "available_ms": 3599996.4486667053,
+        "selected_prefill_ms": 182973.18689042318,
+        "selected_decode_ms": 3417023.261776282,
+        "selected_vision_ms": 0.0,
+        "first_round_ms": null,
+        "vision_ms_per_call": 0.0,
+        "vision_operations": [],
+        "estimator": "op_level"
+      },
+      "h200": {
+        "selected_ms": 2892245.468960971,
+        "available_ms": 2892245.468960971,
+        "selected_prefill_ms": 28506.61373150407,
+        "selected_decode_ms": 2863738.855229467,
+        "selected_vision_ms": 0.0,
+        "first_round_ms": null,
+        "vision_ms_per_call": 0.0,
+        "vision_operations": [],
+        "estimator": "op_level"
+      },
+      "workload_file": "docs/evidence/sol/infer-museglimmer-30b-workload.json.gz",
+      "workload_sha256": "43a03b0aa0555fd57f6b2c8de30038aa89f1afc01a19434831489fb63c9a19e3",
+      "limitation": "Historical native vLLM CPU scheduler/KV replay; frozen 16 GiB KV budget; no H200 capacity rescheduling.",
+      "h200_record_coverage_seconds": 2892.2454689609713,
+      "missing_window_seconds": 707.7545310390287,
+      "baseline_source": {
+        "path": "tasks/infer-museglimmer-30b/runtimes/modal-baseline.json",
+        "keys": [
+          "performance_baseline"
+        ]
+      },
+      "baseline_source_sha256": "c1bc29430f8222924dc7ad2ee90c2a6550b8050a2cedf8697afffd55fc270808"
+    },
+    {
+      "task": "infer-qwen3vl-32b",
+      "unit": "tokens/s",
+      "hardware": "H200",
+      "protocol": "fixed_workload_32_requests",
+      "status": "fixed_workload_analytical",
+      "sol_throughput_estimate": 729.13908078844,
+      "h200_baseline_throughput": 243.57331788795216,
+      "sol_baseline_ratio_estimate": 2.993509663171958,
+      "exact_h200_fixed_window_throughput": null,
+      "official_reward": null,
+      "h20_published_throughput": 301.4007234528259,
+      "h20_reproduction_error_ms": -7.275957614183426e-12,
+      "hardware_speedup_same_work": 2.419168316636645,
+      "selected_output_tokens": 7968,
+      "h20": {
+        "selected_ms": 26436.565608466826,
+        "available_ms": 26436.565608466826,
+        "selected_prefill_ms": 15937.350256632983,
+        "selected_decode_ms": 9835.55550464554,
+        "selected_vision_ms": 663.659847188305,
+        "first_round_ms": null,
+        "vision_ms_per_call": 20.73937022463453,
+        "vision_operations": [
+          [
+            "encoder_patch_embed_gemm",
+            0.04878003891891892,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_position_embed",
+            0.0035051546391752578,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_add_norm_1",
+            0.12618556701030928,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_qkv_gemm",
+            2.9633873643243245,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_attention",
+            3.4984434162162166,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_proj_gemm",
+            0.9877957881081081,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ar_1",
+            0.0,
+            0.0,
+            "empirical"
+          ],
+          [
+            "encoder_add_norm_2",
+            0.12618556701030928,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ffn1_gemm",
+            3.6905148194594593,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_act",
+            0.23572164948453608,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ffn2_gemm",
+            3.6905148194594593,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ar_2",
+            0.0,
+            0.0,
+            "empirical"
+          ],
+          [
+            "encoder_rope_apply",
+            0.37855670103092787,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_merger_norm",
+            0.009347079037800687,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_fc0_gemm",
+            2.341441868108108,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_fc0_act",
+            0.03738831615120275,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_fc1_gemm",
+            2.6016020756756757,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_ar",
+            0.0,
+            0.0,
+            "empirical"
+          ]
+        ],
+        "estimator": "op_level"
+      },
+      "h200": {
+        "selected_ms": 10927.956284257816,
+        "available_ms": 10927.956284257816,
+        "selected_prefill_ms": 2565.508798029162,
+        "selected_decode_ms": 8242.982357333334,
+        "selected_vision_ms": 119.46512889532087,
+        "first_round_ms": null,
+        "vision_ms_per_call": 3.7332852779787773,
+        "vision_operations": [
+          [
+            "encoder_patch_embed_gemm",
+            0.007296054330469934,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_position_embed",
+            0.0029376,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_add_norm_1",
+            0.10575360000000002,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_qkv_gemm",
+            0.44323530057604854,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_attention",
+            0.5232638965133906,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_proj_gemm",
+            0.14774510019201614,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ar_1",
+            0.0,
+            0.0,
+            "empirical"
+          ],
+          [
+            "encoder_add_norm_2",
+            0.10575360000000002,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ffn1_gemm",
+            0.551992110439616,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_act",
+            0.1975536,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ffn2_gemm",
+            0.551992110439616,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_ar_2",
+            0.0,
+            0.0,
+            "empirical"
+          ],
+          [
+            "encoder_rope_apply",
+            0.3172608,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_merger_norm",
+            0.007833600000000001,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_fc0_gemm",
+            0.3502106078625568,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_fc0_act",
+            0.031334400000000005,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_fc1_gemm",
+            0.38912289762506314,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_ar",
+            0.0,
+            0.0,
+            "empirical"
+          ]
+        ],
+        "estimator": "op_level"
+      },
+      "workload_file": "docs/evidence/sol/infer-qwen3vl-32b-workload.json.gz",
+      "workload_sha256": "5c3d124e9a7f666b2e51b49918c76e6cdfcbafdb22875f91513699078c8468ca",
+      "limitation": "Historical native SGLang trajectory plus analytical vision; CPU preprocessing and transport omitted.",
+      "baseline_source": {
+        "path": "tasks/infer-qwen3vl-32b/runtimes/modal-baseline.json",
+        "keys": [
+          "performance_baseline"
+        ]
+      },
+      "baseline_source_sha256": "f8e86296bdc7770c8f43ab006df02c2b8a590a08a49c87b2039106063cc15f79"
+    },
+    {
+      "task": "infer-llada2p1mini-16b",
+      "hardware": "H200",
+      "unit": "tokens/s",
+      "protocol": "single_round_140_requests",
+      "status": "native_single_round_routing_analytical",
+      "sol_throughput_estimate": 1054.792823849492,
+      "h20_reproduction_error_ms": -6.461050361394882e-09,
+      "h20": {
+        "phase_ms": {
+          "context_embedding": 1.3182191676212294,
+          "context_add_norm_1": 105.45753340969833,
+          "context_qkv_gemm": 2596.891760213822,
+          "context_proj_gemm": 1740.0493012600232,
+          "context_add_norm_2": 105.45753340969833,
+          "context_dense_gate_up_gemm": 429.73944864452085,
+          "context_dense_act_gate": 9.886643757159222,
+          "context_dense_ffn2_gemm": 215.52883390607101,
+          "context_shared_gate_up_gemm": 839.0465001909126,
+          "context_shared_act_gate": 18.78462313860252,
+          "context_shared_ffn2_gemm": 432.046332187858,
+          "context_moe_pre_dispatch": 0.0,
+          "context_moe_post_dispatch": 0.0,
+          "block_bidirectional_attention": 34145.84465968044,
+          "qk_norm_partial_rope_kv_write": 177.95958762886596,
+          "full_logits_projection": 6577.584091638029,
+          "final_norm": 5.314071019473081,
+          "logits_fp32_cast": 303.5199633447881,
+          "router_fp32_gemm": 586.212704256,
+          "router_precision_casts": 84.53080412371133,
+          "context_moe": 40404.40590759832,
+          "sampling_argmax": 159.24457681048747,
+          "sampling_softmax": 318.48915362097495,
+          "sampling_gather_threshold_edit": 0.03647193585337915
+        },
+        "per_layer_moe_ms": [
+          3364.259922107675,
+          3647.1247712867507,
+          2050.607505154639,
+          2057.1323283696065,
+          1778.7513402061857,
+          1705.2094509354715,
+          2001.8574417716686,
+          1482.0360992745323,
+          1866.8755525009547,
+          1563.357104238259,
+          2000.0495089728904,
+          2253.479147766323,
+          2381.0025322642227,
+          2641.9563619702176,
+          2476.8824009163804,
+          2043.510274150439,
+          1756.7245880106911,
+          1632.8592959144712,
+          1700.7302817869415
+        ],
+        "total_ms": 89257.34872094293,
+        "sol_throughput_estimate": 642.2888515234218
+      },
+      "h200": {
+        "phase_ms": {
+          "context_embedding": 1.10477312,
+          "context_add_norm_1": 88.38184959999998,
+          "context_qkv_gemm": 2176.4030464,
+          "context_proj_gemm": 1458.3005183999999,
+          "context_add_norm_2": 88.38184959999998,
+          "context_dense_gate_up_gemm": 360.15603712,
+          "context_dense_act_gate": 8.285798400000003,
+          "context_dense_ffn2_gemm": 180.63040511999998,
+          "context_shared_gate_up_gemm": 703.1880908800001,
+          "context_shared_act_gate": 15.743016959999999,
+          "context_shared_ffn2_gemm": 362.08939008000004,
+          "context_moe_pre_dispatch": 0.0,
+          "context_moe_post_dispatch": 0.0,
+          "block_bidirectional_attention": 8269.4258688,
+          "qk_norm_partial_rope_kv_write": 149.1443712,
+          "full_logits_projection": 5512.54167552,
+          "final_norm": 4.45361664,
+          "logits_fp32_cast": 254.37401088,
+          "router_fp32_gemm": 384.97550727259704,
+          "router_precision_casts": 70.84357632000001,
+          "context_moe": 33862.12450304,
+          "sampling_argmax": 133.45969493333334,
+          "sampling_softmax": 266.9193898666667,
+          "sampling_gather_threshold_edit": 0.030566399999999997
+        },
+        "per_layer_moe_ms": [
+          2819.51895552,
+          3056.58232832,
+          1718.57313792,
+          1724.04146176,
+          1490.7359232000001,
+          1429.10193664,
+          1677.7166848,
+          1242.06481408,
+          1564.59106304,
+          1310.21832192,
+          1676.20149248,
+          1888.59580416,
+          1995.47060224,
+          2214.17078784,
+          2075.82560256,
+          1712.62509056,
+          1472.27574272,
+          1368.46671872,
+          1425.34803456
+        ],
+        "total_ms": 54350.9575565526,
+        "sol_throughput_estimate": 1054.792823849492
+      },
+      "official_reward": null,
+      "output_tokens": 57329,
+      "completed_requests": 140,
+      "native_forward_count": 40458,
+      "moe_layer_histograms": 768702,
+      "moe_routing_validated": true,
+      "physical_hbm_traffic_validated": false,
+      "native_h200_capture": false,
+      "hardware_parameters": {
+        "mem_bw": 4800000000000,
+        "bfloat16_tc_flops": 989500000000000,
+        "fp32_flops": 67000000000000
+      },
+      "source_sha256": {
+        "workload": "cde255c24084bb1e30decbdc53db8dd009fc2f105b8421bfcedfa3f994b075d3",
+        "calculator": "09bf040fc4636bd8b48e73eeee3b66353c7f2f5ab1ce2d1cda77e95bd819be44",
+        "h200_system": "e0b52812dcece57c92a4f48e6a85f2e6fba13f2fc4ac6d409e04e9cddea53260"
+      },
+      "limitation": "Fixed H20 native scheduling/cache/JointThreshold/routing repriced for H200 SXM, not native H200 execution. Each accessed expert weight assumed read once per forward; physical HBM traffic, kernel padding, L2 hits, host/network time and auxiliary implementation overheads are not measured.",
+      "independent_operator_check": {
+        "passed": true,
+        "contexts": 999,
+        "operator_checks": 12987,
+        "max_error_ms": 1.734723475976807e-18,
+        "loaded_source_sha256": {
+          "aisimulate_core/__init__.py": "7e88e662455e16a1b820727e00d8ac837dee371fdb8724f8b28333bde4250dbd",
+          "aisimulate_core/sdk/__init__.py": "5774062670abb9a2bd397bb02cb3c9579c7e5297ace106fb9d3a1548c4e4015a",
+          "aisimulate_core/quantization.py": "8a9f935444d4a07b89192356d83b5f1d770c5a6c29d993d23fc1fb418755e8b1",
+          "aisimulate_core/sdk/deepseek_v41.py": "8a96f9bef53aa82dade430e2f78f829bef5115deef3e19f6bb7702bc91e6e4de",
+          "aisimulate_core/sdk/errors.py": "7b2498905f69d5b7520ab95e837b71d8e61980516061b7f0e28998c086d56b60",
+          "aisimulate_core/sdk/glm53flash.py": "9250c8608f0a7a9be4b24ce8b825c021f8614dc5d3c6b47391b1293369c3fd6b",
+          "aisimulate_core/sdk/common.py": "3ca5dc4bdc19deaa2acbd9f08ba8db52f4fd19556701654539ba764f69e5e618",
+          "aisimulate_core/sdk/fpm_config.py": "052129ba3d66199824e45ec4736167ae85c74807e1f0c0997a4f9587473ed789",
+          "aisimulate_core/sdk/speculation/base.py": "f822c6232fa3157bf14ef0dc97a84d0b4c9fab9908cfb8b5fe0097435ded83d8",
+          "aisimulate_core/sdk/speculation/dense_draft.py": "fbb9e540fff580dc88d8ecc552c34ef85f4a413d3b90e1b4a1d16ec7d11196f3",
+          "aisimulate_core/sdk/speculation/dflash.py": "713c01377acead59362dedee9d43c981cdb4d706d7d5e5f9e81b27d2e1456c2d",
+          "aisimulate_core/sdk/speculation/draft_model.py": "c0aadeaaa65900feaf3fa34fda046ec812c9d05edfa47e72af1ece35ca706002",
+          "aisimulate_core/sdk/speculation/dspark.py": "95f4c45d6293e385933ea6b7796f628e72825d9ba22bbe93d03949377114f81d",
+          "aisimulate_core/sdk/speculation/eagle.py": "9f4f06eb6bce795146fe1a72dfae4ec850d85242f959ef87219ddb27bdba38bb",
+          "aisimulate_core/sdk/performance_result.py": "fff896356c98a4a7cf11bbefffd01bb37c56f1a321f034f43fd9aee2c972f598",
+          "aisimulate_core/_native.py": "8540bc1054a9b0b5acf17512361921da68a294bc1c04bb4f7fbe0dde042f620a",
+          "aisimulate_core/sdk/operations/base.py": "6e33c9adab817e69244715fa5583fc1d61adcfa80a7dd7572e27296b42df7707",
+          "aisimulate_core/sdk/operations/communication.py": "2ff10a33efb0182b2cee58a9fff07b4178bb8bfe157e9fb8f72e499383282a81",
+          "aisimulate_core/sdk/operations/elementwise.py": "780d96bd56fc5bf5b33d849231175fed9a63843f6a3eb8d0f70d35fe1a502fb6",
+          "aisimulate_core/sdk/operations/afd_transfer.py": "6190fa856887ab9f5d705e3d861352483c1b8785f71185e63560ebe66e267246",
+          "aisimulate_core/sdk/attention_lanes.py": "539558ddb237def4eb7fe87a58caaa88a9388af803f12b380b12f5a3dc2b674d",
+          "aisimulate_core/sdk/operations/attention.py": "9b06d0b4943913186e3fc6382898214d9d5025ab9cbab230c19a5ab1ceae9ccd",
+          "aisimulate_core/sdk/operations/dsa.py": "4ea739d55474f8c13ac31143057b78c0e81a970dde6f18bd56ee5607527607d8",
+          "aisimulate_core/sdk/operations/dsv4.py": "8d3e3023d8c4d2ae1b9a1b9aa2066341bee9587c4d04ecc29e5a18a00c257328",
+          "aisimulate_core/sdk/operations/embedding.py": "f4f4b09d014c7b1b1d2ba47c99764a12d08f5221260d710fa3746a9e82c5084d",
+          "aisimulate_core/sdk/fpm_identity.py": "49e82292a60c8e4ae14c28917cd1c48462953c36558ee0e53ee82aeed2e6f0fe",
+          "aisimulate_core/sdk/operations/fpm_forward.py": "65eabeeaf15ea6a8599cbc9f7d340abbbfddda806d060af2647f0c98d66bfa8b",
+          "aisimulate_core/sdk/operations/util_empirical.py": "015d9d56daad42313b0c5cd2a454391a875c943b16873396bc96b390c32620f8",
+          "aisimulate_core/sdk/operations/gemm.py": "93ee7bc6fc7e1b7cb581f7a494521789fa0ed06dfbe0badddd073a041999b2e0",
+          "aisimulate_core/sdk/operations/mamba.py": "d33cf10f16a80ec067c81e287040ee6411bfac420584654affc1bbd3919df202",
+          "aisimulate_core/sdk/operations/mla.py": "4dc2e90780da4afe2ab9dd00a7d8d5b00ab7a497f8bd60f3569425e8d6a0834d",
+          "aisimulate_core/sdk/operations/moe.py": "e3c84b189e2b6853240dd214311d5b59cb4add170d2ea7f14a9cff0a070be2db",
+          "aisimulate_core/sdk/operations/moe_comm.py": "5817a90d13a8560b8c3f62c6a6a576bfbb1378ed3db8668f3672564c3293b4ae",
+          "aisimulate_core/sdk/operations/msa.py": "45d6e2a90679932d7ac5488ef7c23bf457bede61b1fccaae3c42caac814cf8ba",
+          "aisimulate_core/sdk/operations/overlap.py": "15526f3df7c230e9c469c1269081e8bc898c782530237846210faac32c953759",
+          "aisimulate_core/sdk/operations/__init__.py": "77990e2d8caeb942df1ecf66100e9978f8c8c850cb8deb7c749089ade1c06fc3",
+          "aisimulate_core/sdk/speculation/mtp.py": "25e0c7a1e7358f691098147e419c6a17ebd3f3d9a5d5bec7ade05af433048aaf",
+          "aisimulate_core/sdk/speculation/materialize.py": "3e114948ce5ea4acb221904072ebd96dd3861ebdce82ccb39ed398a675dfb3b4",
+          "aisimulate_core/sdk/speculation/ngram.py": "4b444cb6481134619056052a3dd47accf204237ca72747e7315674f77a10deb2",
+          "aisimulate_core/sdk/speculation/__init__.py": "bded51fd5ec91af949240096ca5569d83199d550ab5f3553f0576cdd4c78b9e1",
+          "aisimulate_core/sdk/config.py": "a0b6f230686b299b51110851a2f99b4ff689c903694a92585dca20dfbeeb3d46",
+          "aisimulate_core/sdk/step_estimate.py": "4445b58cec246d1d5f96c9bd07486951ed6dcd8b83297240bb88e0e79baab8b3",
+          "aisimulate_core/sdk/rust_engine_step.py": "f85442258117259046917507276a7d5b98d282ae9b9a03ec112ce77c3a125b76",
+          "aisimulate_core/sdk/config_builders.py": "e2514ce8f3bc75e91e6494c81146024200738721b9a0c1c2f12634069858886e",
+          "aisimulate_core/fpm_profile.py": "f04f22ecb02d7851decb638bdc589c196f6acd684aa85483410b4964f48202d4",
+          "aisimulate_core/sdk/fpm_profile.py": "d5c105829669464ae14e7694b13033f6fe279c66b2531ca79adb3effa3caaabe",
+          "aisimulate_core/sdk/models/base.py": "36e20eeebd44729a9bf232d53e46dcdc99da942d3fece2f100c4e59259b94902",
+          "aisimulate_core/sdk/utils.py": "fdccc0b9592c1ff6c5d990a50c5e394ef0c37fbf53f99bc55c99b2c6ffe9f4cc",
+          "aisimulate_core/sdk/models/helpers.py": "7424627615a1067924549696bffa14bad2944bc4ed013785224f7931c4d0f958",
+          "aisimulate_core/sdk/models/blocks/moe.py": "aa426d13138c70a783209caf6e60dc7c76aa42300ba8226036e9e1fc84c80ead",
+          "aisimulate_core/sdk/models/blocks/vit.py": "5e5f719cddeb2ca547ed7f4328bc77ad8c3630aa5522711bb08e436030399886",
+          "aisimulate_core/sdk/models/blocks/__init__.py": "c0f9173fb476be76eadbfbd55da98beab2bfde26508ba37b283553d7c8ca3ade",
+          "aisimulate_core/sdk/models/deepseek.py": "288c5ec57380eb65caa97dd57983ed0e24b386d31fed0eab9df16b0d985a3b9a",
+          "aisimulate_core/sdk/models/deepseek_v32.py": "024e069e848a7a8dd2260947585f4c9cb18f3f90e11e878415adfd5fc4cf13bf",
+          "aisimulate_core/sdk/models/deepseek_v4.py": "b8add8cf812edab8bcce8eee70438dd1e0ded72208d980757568f4b5950f7956",
+          "aisimulate_core/sdk/models/deepseek_v41.py": "1f75dcdb6a616325c0a49aacabf31ac964c80f16b94aed5d6d9edae2f4f630e2",
+          "aisimulate_core/sdk/models/gemma4.py": "b76d73d26464e4c8a9d662a9e8d1e95afd2f17c5b5844a2b0cf09ba4fe810678",
+          "aisimulate_core/sdk/models/glm53flash.py": "3b9257b5ac71a2beccb7316be161dbdb89eac20ebe8cdf4e46db38586f043c9b",
+          "aisimulate_core/sdk/models/gpt.py": "6c6388e88c95ccb593b41b3e75fb6e66d03e5f6b25c96f35ae5c6bf05515dc39",
+          "aisimulate_core/sdk/models/hybrid_moe.py": "7dcc29c5aacaebea17ec3811993a2a883885bfa4c47c07ea6a141b021c36a972",
+          "aisimulate_core/sdk/models/kimi_k3.py": "4b459ced05b11a60c97287c1b9b986400311d5eee0b8a1fec0a319431b31797d",
+          "aisimulate_core/sdk/models/llada.py": "857a6137ddc29da1569e0f798c018b7ed89f231973deeec552376f4ccb547b54",
+          "aisimulate_core/sdk/models/llama.py": "00e7d33e502e7cab0e28e26aedde38b48ea7eda6f10369b7e5d0dcf186aee2f6",
+          "aisimulate_core/sdk/models/minimax_m3.py": "783623d7a4a0ba35ceb5ade1dc882fb6af20ec924f7324af08b7f8b6e10ead14",
+          "aisimulate_core/sdk/models/mistral3.py": "21a7eb82ed7fa150d4c85c7548fdad306d0351ee351ae638548e0edab33e6653",
+          "aisimulate_core/sdk/models/moe.py": "51238411e41266f1e9ee1ca3f1522ec6086c80d613490bb0c7be34bf5c75c390",
+          "aisimulate_core/sdk/models/muse_glimmer.py": "a978205d779c05a79d597df88d64f036d6c11a49b30d1220f3adb3c7d24d0c98",
+          "aisimulate_core/sdk/models/nemotron_h.py": "45f8d03009d0283500871fc0c87965dc5b9eef07180e356b73917adfb77007d4",
+          "aisimulate_core/sdk/models/nemotron_nas.py": "3a1de039be31940383b5c947f05a5bd38d218333662d7d75c4de3704692d860d",
+          "aisimulate_core/sdk/models/vit_ops.py": "1e9cbfed497e4d93fe56116b29bd860b962565394e5d462f3fd4719d17e4ac88",
+          "aisimulate_core/sdk/models/qwen35.py": "db482b91e33a0bf25f3d431ea6a317880f3466841e3a35b33c90fbf1476e3fc8",
+          "aisimulate_core/sdk/models/qwen3vl.py": "b3d620ffcb7be181010cdfbb14a08c70137f248919361f5c12e6d897a22eff94",
+          "aisimulate_core/sdk/models/step3p7.py": "770afc9508e56c190d13894b1211bea3492993f752fe7c37ef9a86c4e2964752",
+          "aisimulate_core/sdk/models/wan2_2_ti2v.py": "98e302a2ecd6960f164035ff64ab932f9369e354635863f2b73978fba668426f",
+          "aisimulate_core/sdk/models/__init__.py": "56ef3276c5f06a651f5edfc525b54613fbe63ae698d284f642f5739c7d5c8ffd",
+          "aisimulate_core/sdk/system_spec.py": "0a457a64e40ff45fa17585f7865352bb507d007c6a709ada3354eb2a8b8b9917",
+          "aisimulate_core/sdk/perf_database.py": "655c381f1e385c3b97990d6bc391efc411a7735246773288f2017c596a394a87",
+          "aisimulate_core/sdk/engine.py": "7088212d4acd10f9ca315e7c728606d26c2a0acb1a9dfa20685b9d6ba57b5ae1"
+        },
+        "native_module_sha256": "10a36a55fe5615f95be9130021ada44ed32a8bd327cfee68159ff5cf81baf0e2",
+        "model_sha256": "6b1db3737e1d173a0326cd0bb740d7ae81515f5ea9468903fa008dadca9cffde"
+      },
+      "h200_baseline_throughput": 90.49270471118129,
+      "sol_baseline_ratio_estimate": 11.656108934040532,
+      "baseline_source": {
+        "path": "tasks/infer-llada2p1mini-16b/runtimes/modal-baseline.json",
+        "keys": [
+          "performance_baseline"
+        ]
+      },
+      "baseline_source_sha256": "5bb0470901ebf032233ee5fb73a55b7d7c9b37f752bbc1b44f818477cb94aa1f"
+    },
+    {
+      "task": "infer-wan2p2ti2v-5b",
+      "unit": "videos/hour",
+      "hardware": "H200",
+      "protocol": "fixed_video_graph",
+      "status": "fixed_workload_analytical",
+      "sol_throughput_estimate": 65.95372374685385,
+      "h200_baseline_throughput": 26.037342677638655,
+      "sol_baseline_ratio_estimate": 2.533043581421084,
+      "exact_h200_fixed_window_throughput": null,
+      "official_reward": null,
+      "h20_published_throughput": 10.209772756277895,
+      "h20_reproduction_error_ms": 0.0,
+      "hardware_speedup_same_work": 6.459862067576335,
+      "selected_output_tokens": null,
+      "h20": {
+        "selected_ms": 352603.3424971573,
+        "available_ms": 352603.3424971573,
+        "selected_prefill_ms": 0.0,
+        "selected_decode_ms": 0.0,
+        "selected_vision_ms": 0.0,
+        "first_round_ms": null,
+        "vision_ms_per_call": 352603.3424971573,
+        "vision_operations": [
+          [
+            "encoder_patch_embedding_wan",
+            21.743782054054055,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_input_norm",
+            0.07506987399770905,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_qkv",
+            16.715548395243243,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_attention",
+            1.3929623662702701,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_out",
+            5.5718494650810815,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_ffn_up",
+            27.859247325405406,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_ffn_act",
+            0.3753493699885453,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_ffn_down",
+            13.929623662702703,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_time_embedding_fc1",
+            28.991709405405402,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_time_embedding_act",
+            8.332951508209241,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_time_embedding_fc2",
+            347.9005128648649,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_norm",
+            499.9770904925548,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_self_qkv",
+            31311.046157837856,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_self_attention",
+            185365.74201081088,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_self_out",
+            10437.015385945944,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_norm",
+            499.9770904925548,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_q",
+            10437.015385945944,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_kv",
+            522.3608873513515,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_attention",
+            3479.0051286486514,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_out",
+            10437.015385945944,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_norm",
+            499.9770904925548,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_up",
+            48706.07180108105,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_act",
+            1166.6132111492932,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_down",
+            48706.07180108105,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_in",
+            0.004529954594594594,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block0_up",
+            0.024159757837837838,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block0_act",
+            0.006944126256841033,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block0_down",
+            0.024159757837837838,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block1_up",
+            0.1932780627027027,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block1_act",
+            0.055553010054728263,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block1_down",
+            0.3865561254054054,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block2_up",
+            3.0924490032432432,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block2_act",
+            0.4444240804378261,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block2_down",
+            6.1848980064864865,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block3_up",
+            24.739592025945946,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block3_act",
+            1.7776963217513044,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block3_down",
+            24.739592025945946,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_out",
+            0.8915499554537355,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_output",
+            8.137647957235587e-05,
+            0.0,
+            "sol"
+          ]
+        ],
+        "estimator": "op_level"
+      },
+      "h200": {
+        "selected_ms": 54583.7262171528,
+        "available_ms": 54583.7262171528,
+        "selected_prefill_ms": 0.0,
+        "selected_decode_ms": 0.0,
+        "selected_vision_ms": 0.0,
+        "first_round_ms": null,
+        "vision_ms_per_call": 54583.7262171528,
+        "vision_operations": [
+          [
+            "encoder_patch_embedding_wan",
+            3.734656,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_input_norm",
+            0.06291456000000001,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_qkv",
+            2.5001527665447196,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_attention",
+            0.20834606387872662,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_out",
+            0.8333842555149065,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_ffn_up",
+            4.166921277574533,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_ffn_act",
+            0.3145728,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_text_ffn_down",
+            2.0834606387872663,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_time_embedding_fc1",
+            4.3363041859525016,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_time_embedding_act",
+            6.9836800000000006,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_time_embedding_fc2",
+            52.03565023143001,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_norm",
+            419.02079999999995,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_self_qkv",
+            4683.208520828701,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_self_attention",
+            27725.24488893381,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_self_out",
+            1561.0695069429012,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_norm",
+            419.02079999999995,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_q",
+            1561.0695069429012,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_kv",
+            78.12977395452249,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_attention",
+            520.3565023143001,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_cross_out",
+            1561.0695069429012,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_norm",
+            419.02079999999995,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_up",
+            7284.991032400202,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_act",
+            977.7152000000001,
+            0.0,
+            "sol"
+          ],
+          [
+            "wan_denoise_ffn_down",
+            7284.991032400202,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_in",
+            0.0034605866666666666,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block0_up",
+            0.00584704,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block0_act",
+            0.005819733333333333,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block0_down",
+            0.00584704,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block1_up",
+            0.035136853333333336,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block1_act",
+            0.04655786666666666,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block1_down",
+            0.05781738914603335,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block2_up",
+            0.4625391131682668,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block2_act",
+            0.3724629333333333,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block2_down",
+            0.9250782263365336,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block3_up",
+            3.7003129053461343,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block3_act",
+            1.4898517333333332,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_block3_down",
+            3.7003129053461343,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_out",
+            0.7471901866666666,
+            0.0,
+            "sol"
+          ],
+          [
+            "encoder_projector_wan_vae_output",
+            6.82e-05,
+            0.0,
+            "sol"
+          ]
+        ],
+        "estimator": "op_level"
+      },
+      "workload_file": "docs/evidence/sol/infer-wan2p2ti2v-5b-workload.json.gz",
+      "workload_sha256": "4d2a713e5161797211d7219efd2bfd94823fa4d0178677b40a4b0a2ae5f66ba0",
+      "limitation": "Analytical fixed diffusion graph, not native runtime trace; CPU/media delivery overhead omitted.",
+      "baseline_source": {
+        "path": "tasks/infer-wan2p2ti2v-5b/runtimes/modal-baseline-h200-v1.json",
+        "keys": [
+          "performance_baseline"
+        ]
+      },
+      "baseline_source_sha256": "d4ff686e3c18ecaf623649505d6432207e6c25fad4acad92e843ff84bac24aa8"
+    }
+  ]
+}

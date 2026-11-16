@@ -1,0 +1,74 @@
+{
+  "runtime_spec_sha256": "a3d028d57089568bdc3a06100e05261f05a2e1553c9d6cb8b4eb2f19939a3c09",
+  "evidence_sha256": {
+    "calibrate.json": "76a934444c28a1c0c4fc35c3c1f8f0dce026ffbd3479339de8f1e54adaaa24f4",
+    "benchmark-summary.json": "35313e9dd933b258e98f6031db69cba1b8817ff6a3eab8625a69e61f8479d3fb",
+    "runtime-lifecycle.json": "170f61d544c23ff13cbe5a6b4a7643d781dc7939ec0c64b563b286f794f8800a"
+  },
+  "performance_baseline": {
+    "unit": "tokens/s",
+    "higher_is_better": true,
+    "output_throughput": 227.00083333333333,
+    "status": "CALIBRATED",
+    "source": "historical-evidence",
+    "runtime_spec_sha256": "a3d028d57089568bdc3a06100e05261f05a2e1553c9d6cb8b4eb2f19939a3c09",
+    "baseline_conditions": {
+      "protocol": "inference-baseline/1",
+      "resources": {
+        "backend": "modal",
+        "gpu": "H200",
+        "gpus": 1,
+        "serve_cpus": 8,
+        "serve_memory_mb": 131072,
+        "benchmark_cpus": 4,
+        "benchmark_memory_mb": 16384
+      },
+      "image": "docker.io/lmsysorg/sglang@sha256:e35dfb0beaf6b1fb6619ae0dac9474b5cdda24b81cee7202316e371301425e46",
+      "inputs": [
+        {
+          "kind": "data",
+          "manifest_sha256": "cbd4f13435305bac8e992557abc451162435f0eabfc5e776e6b690b2477ecf40"
+        },
+        {
+          "kind": "model",
+          "manifest_sha256": "f53c9aea475bdc043b7ba17053852c289fb2d241c2a0271a041b74bfdb6057d2"
+        }
+      ],
+      "driver_env": {},
+      "gate": {
+        "kind": "longbench-v2-openai-chat",
+        "data": "/mnt/rsibench/rsibench/longbench_v2/longbench_v2-gate-256k-v1.jsonl",
+        "center": 0.73,
+        "tolerance": 0.05,
+        "comparison": "lower_bound",
+        "max_tokens": 49152,
+        "max_concurrency": 4,
+        "stop_tokens": []
+      },
+      "bench_serving": {
+        "arrival_mode": "asap",
+        "backend": "sglang",
+        "dataset_name": "mooncake",
+        "random_input_len": 0,
+        "random_output_len": 0,
+        "random_range_ratio": 1.0,
+        "max_concurrency": 1,
+        "window_duration_sec": 3600,
+        "window_full_duration": true,
+        "window_expected_engines": 1,
+        "warmup_requests": 0,
+        "trace_sha256": "819fdc39b13a59dd62f0497a26cecd1d842cbd6c637e77ca26ae3e2a3668229a",
+        "num_prompts": 10000,
+        "seed": 42,
+        "extra_args": [
+          "--dataset-path",
+          "/mnt/rsibench/rsibench/agentic-trace-256k.jsonl",
+          "--mooncake-slowdown-factor",
+          "1.0",
+          "--mooncake-context-length",
+          "262144"
+        ]
+      }
+    }
+  }
+}

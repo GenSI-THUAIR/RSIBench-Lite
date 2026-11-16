@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "path": "agentic-trace-128k.jsonl",
+      "bytes": 7775777,
+      "sha256": "69c6dc27faa867d06473e48c21bab671a52bada5692d766b9565d0b1629d3c31"
+    },
+    {
+      "path": "longbench_v2/longbench_v2-gate-128k-v1.jsonl",
+      "bytes": 24130968,
+      "sha256": "e6bebe2c18110d18ca1f155b89701bb7e1884e9ab9ccbb943e063c0fbf6d9ce1"
+    }
+  ],
+  "total_bytes": 31906745
+}

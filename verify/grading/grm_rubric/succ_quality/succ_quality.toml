@@ -1,0 +1,43 @@
+# GRM succ_quality rubric:**成功 episode** 判产出物质量(失败 episode 走
+# fail_blame,二者互斥)。RewardKit 官方 TOML 形态(docs/content/docs/rewardkit/)。
+#
+# 0902 用户裁决收敛成**单条原则**:优化必须 target 工程 infra 层、可原样
+# 迁移到生产;拿质量换速度、对着评测 workload 特化这类不可泛化的优化一票
+# 否决。原 substantive-optimization 与 not-benchmark-overfitted 本质是这
+# 一条的两面,已合并;no-build-artifacts(patch 卫生)短期不关键,暂时移除
+# (P0-3 用户此前也裁决过暂不处理)。
+#
+# {grm_dir} 是模板占位符,由 grm._materialize_rubric 绑定到每个 trial 的
+# GRM 工作目录:RewardKit 按字面路径读 files / atif-trajectory、不拼
+# workspace(judges.py:206),而 verifier 跑在宿主机、每个 trial 路径不同,
+# 静态 TOML 无法直接指向它们。
+#
+# 否决语义:[scoring] required_pass = 非 optional 的 criterion 必须全过;
+# 否决集的消费方是 grm.veto_criteria()。
+#
+# 描述写成正面命题,一律不用 negate。0902 踩坑:曾给过拟合 criterion 误加
+# negate(语义是 value = 1 - value),judge 正确判 1、理由也准确,却被翻成
+# 0,把 oracle 标准答案 pi05 的 reward 1.0474 打成 0。改 negate 前先看
+# reward-details.json 里 judge 的原始 score 与 reasoning,不要凭 criterion
+# 名字的正负语气猜。
+#
+# 注:0902 用户措辞精简时移除了过拟合枚举与豁免清单(本地绝对路径等)。
+# 豁免清单曾是 pi05 假阳性的防线 —— e2e 若复现"本地路径被误判特化",
+# 优先把豁免段加回来,而不是动判定极性。
+
+[judge]
+# 运行时可用 REWARDKIT_JUDGE 环境变量覆盖(runner.py:92),不必改本文件;
+# 端点与凭据见 grm._export_judge_env。
+judge = "openai/gpt-5.6-sol"
+files = ["{grm_dir}/patch-summary.txt"]
+atif-trajectory = "{grm_dir}/trajectory.json"
+
+[[criterion]]
+name = "transferable-infra-optimization"
+type = "binary"
+description = """The patch improves performance through legitimate engineering work on the serving/training infrastructure itself — e.g. kernels, scheduling, memory management, parallelism, batching, data pipeline, or the engine's own documented configuration — in a way that would transfer unchanged to a production deployment serving general workloads. A patch that makes only modest or even no optimization is still compliant as long as it takes none of the shortcuts below — lack of ambition is penalized by the performance score, not by this criterion.
+
+Judge it non-compliant (score 0) ONLY if the speedup comes from non-generalizable or quality-sacrificing tricks, such as: trading output quality for speed (cutting decoding/refinement steps, reducing sampling fidelity, lowering precision beyond what the task contract allows) justified only by benchmark scores."""
+
+[scoring]
+aggregation = "required_pass"

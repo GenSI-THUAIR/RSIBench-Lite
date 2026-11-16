@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "description": "Task-specific analytical SOL throughput by hardware. Baseline ratios are derived at read time; these presets do not change verifier reward semantics.",
+  "presets": {
+    "H20": {
+      "gpu_count": 1,
+      "variant": "H20 historical hardware model",
+      "kind": "analytical_reference",
+      "official_reward": null,
+      "evidence": {
+        "path": "docs/evidence/sol/h20.json",
+        "sha256": "606363a678cc63a6f05c4f3d262ea58aa7daa8c848fe7645baaeeac6fbbefb80",
+        "throughput_field": "sol_throughput"
+      },
+      "tasks": {
+        "infer-qwen3p8-27b": {
+          "throughput": 300.2241666666667,
+          "unit": "tokens/s",
+          "protocol": "fixed_window_3600",
+          "evidence_status": "fixed_window_native_replay",
+          "baseline": {
+            "path": "tasks/infer-qwen3p8-27b/task.yaml",
+            "keys": [
+              "verifier",
+              "scoring",
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Native SGLang scheduling, cache and acceptance records; analytical approximate MTP cost."
+        },
+        "infer-museglimmer-30b": {
+          "throughput": 71.14194444444445,
+          "unit": "tokens/s",
+          "protocol": "fixed_window_3600",
+          "evidence_status": "fixed_window_native_replay",
+          "baseline": {
+            "path": "tasks/infer-museglimmer-30b/task.yaml",
+            "keys": [
+              "verifier",
+              "scoring",
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Native vLLM CPU scheduler/KV replay with the historical 16 GiB KV budget; analytical timing."
+        },
+        "infer-qwen3vl-32b": {
+          "throughput": 301.4007234528259,
+          "unit": "tokens/s",
+          "protocol": "fixed_workload_32_requests",
+          "evidence_status": "fixed_workload_analytical",
+          "baseline": {
+            "path": "tasks/infer-qwen3vl-32b/task.yaml",
+            "keys": [
+              "verifier",
+              "scoring",
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Native SGLang language trajectory plus analytical vision encoder; CPU preprocessing and transport omitted."
+        },
+        "infer-llada2p1mini-16b": {
+          "throughput": 642.2888515233753,
+          "unit": "tokens/s",
+          "protocol": "single_round_140_requests",
+          "evidence_status": "native_single_round_routing_analytical",
+          "baseline": {
+            "path": "tasks/infer-llada2p1mini-16b/task.yaml",
+            "keys": [
+              "verifier",
+              "scoring",
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Single H20, 140 requests and native per-forward/per-layer MoE routing audited. Physical HBM traffic and auxiliary operator costs remain analytical assumptions; device timing is not endpoint wall time."
+        },
+        "infer-wan2p2ti2v-5b": {
+          "throughput": 10.209772756277895,
+          "unit": "videos/hour",
+          "protocol": "fixed_video_graph",
+          "evidence_status": "fixed_workload_analytical",
+          "baseline": {
+            "path": "tasks/infer-wan2p2ti2v-5b/task.yaml",
+            "keys": [
+              "verifier",
+              "scoring",
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Fixed analytical text/denoising/approximate VAE graph; native execution, MP4 encoding and media delivery not modeled."
+        }
+      },
+      "hardware_models": [
+        "docs/evidence/sol/systems/h20-original.yaml",
+        "docs/evidence/sol/systems/h20-qwen.yaml"
+      ]
+    },
+    "H200": {
+      "gpu_count": 1,
+      "variant": "SXM",
+      "kind": "analytical_reference",
+      "official_reward": null,
+      "evidence": {
+        "path": "docs/evidence/sol/h200.json",
+        "sha256": "6895ee50dbe4d5ae050cb3864b3b1da285ccfddfb67b7169833dd92aaa686e05",
+        "throughput_field": "sol_throughput_estimate"
+      },
+      "tasks": {
+        "infer-qwen3p8-27b": {
+          "throughput": 395.41513447046106,
+          "unit": "tokens/s",
+          "protocol": "fixed_window_3600",
+          "evidence_status": "historical_prefix_rate_only",
+          "baseline": {
+            "path": "tasks/infer-qwen3p8-27b/runtimes/modal-baseline.json",
+            "keys": [
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Historical SGLang MTP acceptance/cache trajectory; approximate MTP operator cost; no H200 native capture.",
+          "record_coverage_seconds": 2771.847789725882,
+          "required_window_seconds": 3600
+        },
+        "infer-museglimmer-30b": {
+          "throughput": 88.55092098804704,
+          "unit": "tokens/s",
+          "protocol": "fixed_window_3600",
+          "evidence_status": "historical_prefix_rate_only",
+          "baseline": {
+            "path": "tasks/infer-museglimmer-30b/runtimes/modal-baseline.json",
+            "keys": [
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Historical native vLLM CPU scheduler/KV replay; frozen 16 GiB KV budget; no H200 capacity rescheduling.",
+          "record_coverage_seconds": 2892.2454689609713,
+          "required_window_seconds": 3600
+        },
+        "infer-qwen3vl-32b": {
+          "throughput": 729.13908078844,
+          "unit": "tokens/s",
+          "protocol": "fixed_workload_32_requests",
+          "evidence_status": "fixed_workload_analytical",
+          "baseline": {
+            "path": "tasks/infer-qwen3vl-32b/runtimes/modal-baseline.json",
+            "keys": [
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Historical native SGLang trajectory plus analytical vision; CPU preprocessing and transport omitted."
+        },
+        "infer-llada2p1mini-16b": {
+          "throughput": 1054.792823849492,
+          "unit": "tokens/s",
+          "protocol": "single_round_140_requests",
+          "evidence_status": "native_single_round_routing_analytical",
+          "baseline": {
+            "path": "tasks/infer-llada2p1mini-16b/runtimes/modal-baseline.json",
+            "keys": [
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Fixed H20 native scheduling/cache/JointThreshold/routing repriced for H200 SXM, not native H200 execution. Each accessed expert weight assumed read once per forward; physical HBM traffic, kernel padding, L2 hits, host/network time and auxiliary implementation overheads are not measured."
+        },
+        "infer-wan2p2ti2v-5b": {
+          "throughput": 65.95372374685385,
+          "unit": "videos/hour",
+          "protocol": "fixed_video_graph",
+          "evidence_status": "fixed_workload_analytical",
+          "baseline": {
+            "path": "tasks/infer-wan2p2ti2v-5b/runtimes/modal-baseline-h200-v1.json",
+            "keys": [
+              "performance_baseline"
+            ]
+          },
+          "limitations": "Analytical fixed diffusion graph, not native runtime trace; CPU/media delivery overhead omitted."
+        }
+      },
+      "assumption": "SXM analytical peak; worker SXM/NVL SKU not independently verified. Do not apply to H200 NVL.",
+      "require_baseline_hardware": true,
+      "hardware_models": [
+        "docs/evidence/sol/systems/h200_sxm.yaml"
+      ]
+    }
+  }
+}

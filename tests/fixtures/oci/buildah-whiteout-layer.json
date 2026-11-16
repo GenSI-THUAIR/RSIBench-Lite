@@ -1,0 +1,7 @@
+{
+  "origin": "buildah 1.28.2 via docker_prepare/nsbuild.sh: scratch+lower 树 → 覆盖 upper 并真删 README.md → commit → skopeo copy oci:",
+  "media_type": "application/vnd.oci.image.layer.v1.tar+gzip",
+  "descriptor_digest": "sha256:acf8ed7a318db5112f3c9872ab682c68e8dc2d8b053db2ae3187cb163680a83b",
+  "diff_id": "sha256:200a2008f7200488c5a7bc43d0412264ab373c4a68885a5fcf3af701ab1a3bda",
+  "size": 440
+}

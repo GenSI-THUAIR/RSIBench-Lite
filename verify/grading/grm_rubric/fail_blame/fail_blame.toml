@@ -1,0 +1,13 @@
+# GRM fail_blame rubric:**失败 episode** 判归因,与 succ_quality 互斥
+# (健康 episode 问归因没有意义;失败且无轨迹则整体跳过 —— 宁可不出分,
+# 也不凭 patch 猜)。{grm_dir} 占位符说明见 succ_quality/succ_quality.toml。
+
+[judge]
+judge = "openai/gpt-5.6-sol"
+files = ["{grm_dir}/patch-summary.txt"]
+atif-trajectory = "{grm_dir}/trajectory.json"
+
+[[criterion]]
+name = "agent-at-fault"
+type = "binary"
+description = """The failure was caused by the agent's own work (bad patch, broken service, wrong configuration). It was NOT caused by platform/infrastructure issues such as the model endpoint dropping connections, the harness exiting non-zero before sending requests, scheduler preemption, or node failure."""

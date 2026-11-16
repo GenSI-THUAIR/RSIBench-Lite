@@ -1,0 +1,95 @@
+{
+  "files": [
+    {
+      "path": "wan22-h200-reference/reference-manifest.json",
+      "bytes": 4206,
+      "sha256": "5e0d0006a244c64f6092b1ec76da00aa05ba9cc2b5399dae2fb32d83cb42bab4"
+    },
+    {
+      "path": "wan22-h200-reference/boxing-cats-42.mp4",
+      "bytes": 7095225,
+      "sha256": "968427b336701be3c34b6af64084d8a0e3c2676b41ad7e12d7ff0a07cd21cdb6"
+    },
+    {
+      "path": "wan22-h200-reference/boxing-cats-43.mp4",
+      "bytes": 8868959,
+      "sha256": "b2f2b807865f9e03c8f24688a89a042d02fd7adac7a001eeca1303d2794b0913"
+    },
+    {
+      "path": "wan22-h200-reference/meadow-dog-42.mp4",
+      "bytes": 16241016,
+      "sha256": "179867d8f8d8116b306cb859f5f324e01a5b68670dfa421714474ebb670a7ebb"
+    },
+    {
+      "path": "wan22-h200-reference/meadow-dog-43.mp4",
+      "bytes": 14298962,
+      "sha256": "1ae1bc80cb123a4975906d48d6459a4dccee6942f83d7b40a646c515826fe6e0"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/baseline-1/report.json",
+      "bytes": 14240,
+      "sha256": "db4e6f43b8b7203b07c325e464e72cf64992efa8d8289cb00c78b89e2dfe7b45"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/baseline-2/report.json",
+      "bytes": 14222,
+      "sha256": "561a3c93b071f7dc7ef47592981f26ce0a35483ce36c4363774492b5de2523e7"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/baseline-3/report.json",
+      "bytes": 14235,
+      "sha256": "9300a4645cd327ddcbccb5c0cf7dc6b937fc6b8b8a7c53d79cc25d55f767bc0c"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/calibration.json",
+      "bytes": 2609,
+      "sha256": "7d406c9dd7a605ac8e6c3da012c0fe72209baf4fdd88e6f92818471f40f21592"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/cfg-disabled/report.json",
+      "bytes": 14596,
+      "sha256": "8036d7e402f8ecc8cd50c25eb8be8c9e5c10e0e888b26de00e4e78ba00afab26"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/downscale-upscale/report.json",
+      "bytes": 14617,
+      "sha256": "15222ce1488e7e8c6d98e23ff187debc45052e2b3b437269906447e3cf9cd76c"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/frame-padding/report.json",
+      "bytes": 14610,
+      "sha256": "ce8a38f9caf4a6e8475ba5428eadaf7f2be23182cf8e059ad422bc590962bb2d"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/known-good/report.json",
+      "bytes": 14592,
+      "sha256": "4f0df2fe23fdc384c2a198537eed964371b8b70121442d163c3eb497c089d1e7"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/prerecorded-replay/report.json",
+      "bytes": 12242,
+      "sha256": "869062eb53b59248a795eb27f0d995f1ef18fcc8b5cb24126e382714014e5cbc"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/prompt-ignored/report.json",
+      "bytes": 14373,
+      "sha256": "7ff86ed50796ef76715f5c1c75459e36c0a5ceff07e77c5ce072b95ef4224f9e"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/reduced-steps/report.json",
+      "bytes": 14599,
+      "sha256": "302c4965b35bcf9b8836fb4f8f7ec138b64c850a3d2c2fae090ebd3cc3931c0f"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/seed-ignored/report.json",
+      "bytes": 14419,
+      "sha256": "d13bc9a6fcb29cfc878ef9ca51770a30202cc36ab6e1e27c4a8f7109446fa8c9"
+    },
+    {
+      "path": "wan22-h200-calibration-v1/static-repeat/report.json",
+      "bytes": 12330,
+      "sha256": "290825db3e6586d0b5072ab21fb46c1c8495c8a9539cc3f149bdf310ee8c9133"
+    }
+  ],
+  "total_bytes": 46680052
+}

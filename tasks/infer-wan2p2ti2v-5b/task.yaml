@@ -1,0 +1,292 @@
+schema_version: '1.4'
+platforms:
+  modal:
+    image: docker.io/vllm/vllm-openai@sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d
+    entrypoint: []
+    setup: runtimes/open-lite-setup.sh
+    model:
+      repository: Wan-AI/Wan2.2-TI2V-5B-Diffusers
+      revision: b8fff7315c768468a5333511427288870b2e9635
+      volume: rsibench-wan22-bf16-b8fff731
+      manifest_sha256: 60d3bb01c591283aa0dd8260a0563b57b9737e0a127d3aa08fd6c0e3354d08bd
+      manifest: runtimes/open-lite-model.json
+    data:
+      volume: rsibench-wan22-h200-data-b99509b9
+      mount: /mnt/rsibench
+      manifest_sha256: b99509b9ce4d668c40edde4c2dd2584fda4c397e37a95cf69638fc9b73cbeb1d
+      manifest: runtimes/h200-data-v1.json
+    baseline: runtimes/modal-baseline-h200-v1.json
+    video_calibration:
+      gate:
+        data: /mnt/rsibench/wan22-h200-reference/reference-manifest.json
+        source: Public calibration reference.
+      video_benchmark:
+        identity:
+          hardware:
+            model: NVIDIA H200
+            count: 1
+            driver: 610.57.04
+          model_revision: b8fff7315c768468a5333511427288870b2e9635
+          weights_manifest_sha256: cf030fe53ade2704e874a25e588e73bbad33d7e8eed7fb66a9098774a99b20d8
+          engine_commit: ff6e906a25de1ca3122c0d0d5250fde5a0ddbc7b
+          image_digest: sha256:50509e700235cea487715cedeb501d20a1cd15fa6a54ce93688284bd0d96995d
+          sampling:
+            original_non_distilled_weights: true
+            dtype: bfloat16
+            text_encoder_dtype: bfloat16
+            vae_dtype: bfloat16
+            vae_tiling: true
+            vae_tiling_resolved_config:
+              use_slicing: false
+              use_tiling: true
+              tile_sample_min_height: 256
+              tile_sample_min_width: 256
+              tile_sample_stride_height: 192
+              tile_sample_stride_width: 192
+            scheduler: FlowUniPCMultistepScheduler
+            scheduler_resolved_config:
+              num_train_timesteps: 1000
+              solver_order: 2
+              prediction_type: flow_prediction
+              shift: 5.0
+              use_dynamic_shifting: false
+              thresholding: false
+              dynamic_thresholding_ratio: 0.995
+              sample_max_value: 1.0
+              predict_x0: true
+              solver_type: bh2
+              lower_order_final: true
+              disable_corrector: []
+              solver_p: null
+              timestep_spacing: linspace
+              steps_offset: 0
+              final_sigmas_type: zero
+            solver: unipc
+            eager: true
+            attention_backend: FLASH_ATTN
+            cpu_offload: false
+            cache_backend: null
+            tensor_parallel_size: 1
+            cfg_parallel_size: 1
+            rng:
+              device: cuda
+              initial_latent_dtype: float32
+              generator: torch.Generator
+              sm_count: 132
+              torch: 2.13.0+cu129
+          metric_identity:
+            lpips: 0.1.4
+            torch: 2.13.0+cu129
+            torchvision: 0.28.0+cu129
+            av: 16.0.1
+            numpy: 2.2.6
+            alexnet_sha256: 7be5be791159472b1fbf3c69796f7cb30dca7ad8466c2df70058c37116cdee02
+            lpips_alex_sha256: df73285e35b22355a2df87cdb6b70b343713b667eddbda73e1977e0c860835c0
+          modal_recipe_sha256: 8f8b3e3b9245a806e7cd451e0fe8ea6e4e209ae367066175cfebc2a059feb136
+        reference_manifest_sha256: 5e0d0006a244c64f6092b1ec76da00aa05ba9cc2b5399dae2fb32d83cb42bab4
+        calibration:
+          status: admitted
+          path: /mnt/rsibench/wan22-h200-calibration-v1/calibration.json
+          sha256: 7d406c9dd7a605ac8e6c3da012c0fe72209baf4fdd88e6f92818471f40f21592
+        quality:
+          expected_video_codec: h264
+          expected_fps: 24
+          expected_frame_count: 121
+          duration_tolerance_sec: 0.001
+          timestamp_tolerance_sec: 0.0001
+          lpips_max: 0.3398561805240379
+          lpips_worst_frame_max: 0.44284312427043915
+          temporal_delta_mae_max: 0.07899076144862563
+          temporal_delta_worst_max: 0.15622975171196002
+          motion_ratio_min: 0.9179051569083884
+          motion_ratio_max: 1.0285385892314447
+task:
+  name: rsibench/infer-wan2p2ti2v-5b
+  version: 0.1.1
+  description: Optimize original BF16 Wan2.2 TI2V-5B T2V-only serving on one H20 with
+    a calibrated full-video reference workload
+  authors:
+  - name: RSIBench contributors
+  keywords:
+  - inference
+  - deployment
+  - cuda
+  - h20
+  - vllm-omni
+  - video-generation
+  - bf16
+metadata:
+  category: systems-engineering
+  difficulty: hard
+  display:
+    model: Wan2.2 TI2V-5B (T2V-only)
+    score_phrase: video generation throughput over the complete working set
+    gate_phrase: the all-frame and temporal reference-quality gate
+    python_row: '`python3` (separate, pinned vLLM-Omni image)'
+  contract:
+    launch_display: a foreground service process (do not daemonize)
+environment:
+  os: linux
+  workdir: /workspace/deploy
+  build_timeout_sec: 46800.0
+  nodes: 1
+  gpus: 1
+  gpu_types:
+  - NVIDIA_H20
+  cpus: 22
+  memory_mb: 232448
+  storage_mb: 102400
+  env: {}
+  mounts:
+  - /mnt/rsibench/wan22-model
+agent:
+  timeout_sec: 28800.0
+  user: root
+verifier:
+  timeout_sec: 57600.0
+  environment_mode: separate
+  environment:
+    os: linux
+    workdir: /workspace/benchmark
+    nodes: 1
+    gpus: 1
+    gpu_types:
+    - NVIDIA_H20
+    cpus: 22
+    memory_mb: 232448
+    storage_mb: 102400
+    mounts:
+    - /mnt/rsibench/wan22-model
+    - /mnt/rsibench/wan22-reference
+    - /mnt/rsibench/wan22-calibration-v3
+    env: {}
+  scoring:
+    python: python3
+    collect_video_outputs: false
+    engine_repo: /vllm-workspace/vllm-omni
+    layer_artifact: submit_oci.tar.gz
+    gate:
+      kind: video-reference
+      data: /mnt/rsibench/wan22-reference/reference-manifest.json
+      center: 1.0
+      tolerance: 0.0
+      stop_tokens: []
+      source: Public calibration reference.
+    service_label: Wan2.2 TI2V-5B T2V-only
+    health_timeout_sec: 3600
+    model_path: /mnt/rsibench/wan22-model
+    served_model_name: Wan-AI/Wan2.2-TI2V-5B-Diffusers
+    video_benchmark:
+      mode: video-only
+      endpoint_path: /v1/videos/sync
+      case_ids:
+      - boxing-cats-42
+      - boxing-cats-43
+      - meadow-dog-42
+      - meadow-dog-43
+      request:
+        negative_prompt: blurry, low quality, static, distorted, artifacts, watermark,
+          text
+        width: 1280
+        height: 704
+        fps: 24
+        num_frames: 121
+        num_inference_steps: 50
+        guidance_scale: 5.0
+        flow_shift: 5.0
+        extra_params:
+          sample_solver: unipc
+      warmup:
+        prompt: Two anthropomorphic cats in comfortable boxing gear and bright gloves
+          fight intensely on a spotlighted stage, cinematic lighting, smooth motion.
+        seed: 40
+      warmup_num_inference_steps: 50
+      timeout_sec: 1800
+      identity:
+        hardware:
+          model: NVIDIA H20
+          count: 1
+          driver: 535.261.03
+        model_revision: b8fff7315c768468a5333511427288870b2e9635
+        weights_manifest_sha256: cf030fe53ade2704e874a25e588e73bbad33d7e8eed7fb66a9098774a99b20d8
+        engine_commit: ff6e906a25de1ca3122c0d0d5250fde5a0ddbc7b
+        image_digest: sha256:66bc9b18f290b7183f4055b1141a5bffcf8b4cc28245125beb4300a107165cea
+        sampling:
+          original_non_distilled_weights: true
+          dtype: bfloat16
+          text_encoder_dtype: bfloat16
+          vae_dtype: bfloat16
+          vae_tiling: true
+          vae_tiling_resolved_config:
+            use_slicing: false
+            use_tiling: true
+            tile_sample_min_height: 256
+            tile_sample_min_width: 256
+            tile_sample_stride_height: 192
+            tile_sample_stride_width: 192
+          scheduler: FlowUniPCMultistepScheduler
+          scheduler_resolved_config:
+            num_train_timesteps: 1000
+            solver_order: 2
+            prediction_type: flow_prediction
+            shift: 5.0
+            use_dynamic_shifting: false
+            thresholding: false
+            dynamic_thresholding_ratio: 0.995
+            sample_max_value: 1.0
+            predict_x0: true
+            solver_type: bh2
+            lower_order_final: true
+            disable_corrector: []
+            solver_p: null
+            timestep_spacing: linspace
+            steps_offset: 0
+            final_sigmas_type: zero
+          solver: unipc
+          eager: true
+          attention_backend: FLASH_ATTN
+          cpu_offload: false
+          cache_backend: null
+          tensor_parallel_size: 1
+          cfg_parallel_size: 1
+        metric_identity:
+          lpips: 0.1.4
+          torch: 2.13.0+cu129
+          torchvision: 0.28.0+cu129
+          av: 16.0.1
+          numpy: 2.2.6
+          alexnet_sha256: 7be5be791159472b1fbf3c69796f7cb30dca7ad8466c2df70058c37116cdee02
+          lpips_alex_sha256: df73285e35b22355a2df87cdb6b70b343713b667eddbda73e1977e0c860835c0
+      reference_manifest_sha256: 819b8ce6f902a8f0b20e6d6ede640fcbf16e090b03d691ee287b8e9b92c98d27
+      calibration:
+        status: admitted
+        path: /mnt/rsibench/wan22-calibration-v3/calibration.json
+        sha256: 8b316063f30a1adf7410dc60e7584fd079173b5277bf635ed80251dd70924004
+      quality:
+        expected_video_codec: h264
+        expected_fps: 24
+        expected_frame_count: 121
+        duration_tolerance_sec: 0.001
+        timestamp_tolerance_sec: 0.0001
+        lpips_max: 0.2583454989266297
+        lpips_worst_frame_max: 0.3124987334012985
+        temporal_delta_mae_max: 0.052246694466108315
+        temporal_delta_worst_max: 0.14031569889061715
+        motion_ratio_min: 0.979853234044812
+        motion_ratio_max: 1.0499727219810766
+    performance_baseline:
+      unit: videos/hour
+      higher_is_better: true
+      output_throughput: 6.6280430134963435
+      source: Public calibration reference.
+      protocol: T2V-only BF16 original weights; 4 unique prompt/seed requests; 1280x704
+        121f 24fps 50steps CFG5 shift5 UniPC; one full warmup; concurrency1; complete
+        generation and media return
+      extra:
+        unit: videos/hour
+        baseline_workset_seconds: 2172.5869869398884
+        baseline_runs:
+        - baseline-1
+        - baseline-2
+        - baseline-3
+        calibration_plan_sha256: d009eaeb15869f53604d7500eaeb73b9a0f40c7c14b623737349c0179ef01278

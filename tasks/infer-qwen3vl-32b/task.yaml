@@ -1,0 +1,179 @@
+schema_version: '1.4'
+platforms:
+  modal:
+    image: docker.io/lmsysorg/sglang@sha256:5a40c4b2d1278ea563c9eec6c70a7ca60282067574f11ce8bc636bc46ed3adca
+    model:
+      repository: Qwen/Qwen3-VL-32B-Instruct-FP8
+      revision: 4bf2c2f39c37c0fede78bede4056e1f18cdf8109
+      volume: rsibench-qwen3vl-fp8-4bf2c2f3
+      manifest_sha256: aae8274f900f8e8633fdc63f532909d3cf60845276b6e33dccbc07419dba7515
+      manifest: runtimes/open-lite-model.json
+    data:
+      volume: rsibench-qwen3vl-data-7fc42dda
+      manifest_sha256: 5c4c3d80fae0cad1835f4acfd98e258d8ae60b4358d0f54f70259b123efd8242
+      manifest: runtimes/open-lite-data.json
+    baseline: runtimes/modal-baseline.json
+task:
+  name: rsibench/infer-qwen3vl-32b
+  version: 0.1.0
+  description: Optimize SGLang multimodal serving for Qwen3-VL-32B FP8 on a single H20; evaluate its patch in isolated
+    serve and benchmark jobs
+  authors:
+  - name: RSIBench contributors
+  keywords:
+  - inference
+  - deployment
+  - cuda
+  - h20
+  - sglang
+  - performance-tuning
+  - multimodal
+  - vlm
+metadata:
+  category: systems-engineering
+  difficulty: hard
+  display:
+    model: Qwen3-VL-32B(FP8)
+    score_phrase: '**multimodal workload throughput**'
+    gate_phrase: the **multimodal correctness gate**
+    python_row: '`python3` (included in the image with SGLang and its dependencies)'
+  contract:
+    launch_display: '`python3 -m sglang.launch_server` included in the image'
+    endpoints:
+    - '`/health`'
+    - '`/generate` (including `image_data`)'
+    - '`/v1/chat/completions` (including `image_url` content blocks)'
+    - '`/v1/models`'
+    max_context: 65536
+    context_at_least: true
+  resources:
+  - label: Bounded-window profiling script (SGLang server-side torch profiler wrapper)
+    path: /mnt/rsibench/rsibench/profile_sglang.py
+environment:
+  cookbook_url: https://docs.sglang.io/cookbook/autoregressive/Qwen/Qwen3-VL
+  image_name: docker.io/lmsysorg/sglang:v0.5.6.post2-cu129-amd64
+  os: linux
+  workdir: /workspace/deploy
+  skills_dir: /tmp/harbor-skills
+  build_timeout_sec: 46800.0
+  nodes: 1
+  gpus: 1
+  gpu_types:
+  - NVIDIA_H20
+  cpus: 22
+  memory_mb: 232448
+  storage_mb: 51200
+  env: {}
+  mounts:
+  - /mnt/rsibench/qwen3vl_32b_fp8
+  - /mnt/rsibench/rsibench
+agent:
+  timeout_sec: 28800.0
+  user: root
+verifier:
+  timeout_sec: 54000.0
+  environment_mode: separate
+  environment:
+    os: linux
+    workdir: /workspace/benchmark
+    nodes: 1
+    gpus: 1
+    gpu_types:
+    - NVIDIA_H20
+    cpus: 22
+    memory_mb: 232448
+    storage_mb: 51200
+    mounts:
+    - /mnt/rsibench/qwen3vl_32b_fp8
+    - /mnt/rsibench/rsibench
+    env: {}
+  scoring:
+    python: python3
+    engine_repo: /sgl-workspace/sglang
+    layer_artifact: submit_oci.tar.gz
+    gate:
+      kind: mmmu-openai-chat
+      num_questions: 847
+      data: /mnt/rsibench/rsibench/mmmu_val_mcq.jsonl
+      center: 0.7273
+      tolerance: 0.05
+      stop_tokens: []
+      source: Public calibration reference.
+    gate_timeout_sec: 14400
+    service_label: Qwen3-VL-32B
+    health_timeout_sec: 2400
+    model_path: /mnt/rsibench/qwen3vl_32b_fp8
+    served_model_name: qwen3-vl-32b
+    bench_serving:
+      backend: sglang
+      script_path: /sgl-workspace/sglang/python/sglang/bench_serving.py
+      agent_script_path: /mnt/rsibench/rsibench/benchmarks/run_official_bench-native-mm-v1-7dab89af1a72e0c4a7a35ba45460722cc8b22c40efc58d167f86aeeb523960fe.py
+      agent_script_pending: false
+      agent_script_env:
+        HARBOR_BENCH_SERVING: /sgl-workspace/sglang/python/sglang/bench_serving.py
+      dataset_name: image
+      random_input_len: 2048
+      random_output_len: 256
+      random_range_ratio: 1.0
+      max_concurrency: 8
+      num_prompts: 32
+      seed: 42
+      extra_args:
+      - --image-count
+      - '1'
+      - --image-resolution
+      - 1080p
+      - --image-format
+      - jpeg
+      - --image-content
+      - random
+    performance_baseline:
+      unit: tokens/s
+      higher_is_better: true
+      output_throughput: 106.07938479466918
+      source: Public calibration reference.
+      protocol: 'MM-v1 image dataset: 1x1920x1080 random RGB JPEG quality=85 per request, text input parameter=2048,
+        output=256, concurrency=8, prompts=32, seed=42. Native SGLang /generate sends the unexpanded multimodal
+        template plus image_data via the local native-mm-v1 wrapper; no image-token double expansion. Warm service
+        after full MMMU, 1 warmup, flush_cache=false; throughput=8192/77.22518391162157 (main window, not wrapper
+        wall time). All 32 requests succeeded; no image-token mismatch warnings; server prefill 130370 new+4319
+        cached=134689=text69345+vision65344, with each eight-request batch independently reconciled.'
+      extra:
+        backend: sglang
+        dataset_name: image
+        request_rate: inf
+        max_concurrency: 8
+        random_input_len: 2048
+        random_output_len: 256
+        random_range_ratio: 1.0
+        duration: 77.22518391162157
+        completed: 32
+        total_input_tokens: 134689
+        total_input_text_tokens: 69345
+        total_input_vision_tokens: 65344
+        total_output_tokens: 8192
+        total_output_tokens_retokenized: 8192
+        request_throughput: 0.4143725968541765
+        input_throughput: 1744.1072093028804
+        output_throughput: 106.07938479466918
+        total_throughput: 1850.1865940975497
+        mean_e2e_latency_ms: 19283.670175354928
+        median_e2e_latency_ms: 19595.662243664265
+        std_e2e_latency_ms: 596.8777144718747
+        p99_e2e_latency_ms: 19704.48333837092
+        mean_ttft_ms: 8132.2773597203195
+        median_ttft_ms: 8144.236056134105
+        std_ttft_ms: 2722.1078286685297
+        p99_ttft_ms: 11232.09435686469
+        mean_tpot_ms: 43.73095221817494
+        median_tpot_ms: 40.19179276975931
+        std_tpot_ms: 10.56043595028304
+        p99_tpot_ms: 65.95065212585763
+        mean_itl_ms: 43.73028025250225
+        median_itl_ms: 33.01337547600269
+        std_itl_ms: 238.50784031206075
+        p95_itl_ms: 33.59383139759302
+        p99_itl_ms: 33.943039029836655
+        concurrency: 7.990624487441254
+        max_output_tokens_per_s: 248.0
+        max_concurrent_requests: 16

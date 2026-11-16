@@ -1,0 +1,92 @@
+{
+  "repository": "inclusionAI/LLaDA2.1-mini",
+  "revision": "20e64e2ad21644d0e5248586ed9c942cdd45de0f",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1519,
+      "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+    },
+    {
+      "path": "README.md",
+      "bytes": 14845,
+      "sha256": "b96541953be3008e0031c20058de32705fda65a3a62d0a5ed0eaf725a299c69b"
+    },
+    {
+      "path": "config.json",
+      "bytes": 1509,
+      "sha256": "6b1db3737e1d173a0326cd0bb740d7ae81515f5ea9468903fa008dadca9cffde"
+    },
+    {
+      "path": "configuration_llada2_moe.py",
+      "bytes": 3157,
+      "sha256": "618ba95f31bcdd08fd5f92d47d7a3404c5dd5e24bef1c3847f7126025dc263e4"
+    },
+    {
+      "path": "model-00000-of-00008.safetensors",
+      "bytes": 5735111000,
+      "sha256": "21a904092ad20835b30400a1ee939f765d88214381e0256f1a5b598da9b425cc"
+    },
+    {
+      "path": "model-00001-of-00008.safetensors",
+      "bytes": 3825430152,
+      "sha256": "6f89a9d7bffaa06dffee29ecca93c870657ae670cb9a848c052adeb84487f4df"
+    },
+    {
+      "path": "model-00002-of-00008.safetensors",
+      "bytes": 3825430152,
+      "sha256": "441c1b58669f0cabc1c6f22ab83a56f8c2e38eba2a2e534d01257d7c8247695a"
+    },
+    {
+      "path": "model-00003-of-00008.safetensors",
+      "bytes": 3825431744,
+      "sha256": "602798afb9acfccefe5f2186a59ee24b4847f3f587f3fa589173f02fc917c4a6"
+    },
+    {
+      "path": "model-00004-of-00008.safetensors",
+      "bytes": 3825431976,
+      "sha256": "7bd5fc04fc64bc8ef9e54dbbb630c570417dc45ee2bbd47b0d71dffc61830ccf"
+    },
+    {
+      "path": "model-00005-of-00008.safetensors",
+      "bytes": 3825431976,
+      "sha256": "a7b097875ab571ecfb710cecb3cacb46b4de67a88b5eacdf8942a8133384e03a"
+    },
+    {
+      "path": "model-00006-of-00008.safetensors",
+      "bytes": 3825431976,
+      "sha256": "d77a97241a25a79c973aaed3395eb21f8c940e40da71a1279ae19ea8431ba5ee"
+    },
+    {
+      "path": "model-00007-of-00008.safetensors",
+      "bytes": 3825431976,
+      "sha256": "61f8f4a0c54780d41250b9265075169971f2e4fe6b52f4ccd766ddd2305bc764"
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "bytes": 1338852,
+      "sha256": "42bc76b39efa3bbb71de6d7580d490f986334299b6cdd976b966e1a854ac6a44"
+    },
+    {
+      "path": "modeling_llada2_moe.py",
+      "bytes": 60421,
+      "sha256": "fe5c809d4d0e3e489eff649a976300daaf0f1086dd411ef72da602fa8097be46"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 180,
+      "sha256": "2fb357349941f0b4b88669cc2745e70350487dc1b46a5b4dfab8ae1882efdf0b"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 7663359,
+      "sha256": "0a1db22fe3dfb28f9b2be6d87f472af371b50235d7f5366ecac14b52ff8c002b"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 4595,
+      "sha256": "053a74db9233c69408762c4e70043cf9811504d1a59220adb0d00c956cf7749c"
+    }
+  ],
+  "total_bytes": 32522219389
+}
